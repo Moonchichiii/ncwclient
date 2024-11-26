@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin } from 'lucide-react';
-import { useNavigation } from '../../../context/NavigationContext'; // Adjust the import path as needed
+import { useNavigation } from '../../../context/NavigationContext'; 
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -46,7 +46,7 @@ const Header = () => {
                             className="text-xl font-bold"
                             whileHover={{ scale: 1.05 }}
                         >
-                            Nordic<span className="text-[#CBB26A]">Code</span>
+                            Nordic Code <span className="text-[#CBB26A]">Works</span>
                         </motion.span>
                     </Link>
 

@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, GitHub, Linkedin, Send } from 'lucide-react';
+import { Mail, Github, Linkedin, Send } from 'lucide-react';
+import { contactService, ContactFormData } from '../../api/services/contact';
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    try {
+      await contactService.submit(formData);
+      // Handle success (could add toast notification here)
+      console.log('Form submitted successfully');
+    } catch (error) {
+      // Handle error (could add error toast notification here)
+      console.error('Error submitting form:', error);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -117,7 +124,7 @@ const ContactPage = () => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-gray-300 hover:text-[#CBB26A] transition-colors"
                 >
-                  <GitHub size={20} />
+                  <Github size={20} />
                   GitHub
                 </a>
                 <a 

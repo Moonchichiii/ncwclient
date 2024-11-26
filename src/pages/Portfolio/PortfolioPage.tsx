@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useProjects } from '../../hooks/useProjects';
 import { ExternalLink, Github, Loader } from 'lucide-react';
+import useProjects from '../../hooks/useProjects';
 
 const categories = ['All', 'Frontend', 'Backend', 'Full Stack', 'UI/UX'];
 
@@ -9,7 +9,7 @@ const PortfolioPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { projects, loading, error } = useProjects();
 
-  const filteredProjects = projects?.results.filter(project => 
+  const filteredProjects = projects?.results.filter(project =>
     selectedCategory === 'All' || project.tags.includes(selectedCategory)
   );
 

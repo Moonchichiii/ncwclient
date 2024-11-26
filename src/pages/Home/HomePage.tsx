@@ -1,8 +1,22 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Code, Database, Globe } from 'lucide-react';
+import CookieConsent from '../../components/common/CookieConsent';
+import { Helmet } from 'react-helmet';
 
 const HomePage = () => {
+  // Show cookie consent after a short delay
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie-consent');
+    if (!consent) {
+      const timer = setTimeout(() => {
+        // This will trigger the cookie consent animation
+        localStorage.removeItem('cookie-consent');
+      }, 1000); // Adjust timing as needed
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -29,6 +43,10 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#343A40] text-white">
+      <Helmet>
+        <title>Home - Nordic Code Works</title>
+        <meta name="description" content="Crafting elegant digital solutions with Scandinavian simplicity" />
+      </Helmet>
       {/* Hero Section */}
       <motion.section 
         className="h-screen flex flex-col items-center justify-center px-4 relative"
@@ -134,6 +152,9 @@ const HomePage = () => {
           </div>
         </motion.div>
       </section>
+
+      {/* Cookie Consent */}
+      <CookieConsent />
     </div>
   );
 };
