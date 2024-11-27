@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+
+const config: Config = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',  // Ensure all paths to content are correct
+    './src/**/*.{js,ts,jsx,tsx}', // Scan your source files for class usage
   ],
   theme: {
     extend: {
@@ -31,7 +32,7 @@ export default {
           shade4: '#694074',
           shade5: '#714674',
         },
-        // Accent colors (used sparingly)
+        // Accent colors
         accent: {
           gold: '#CBB26A',
           blue: '#0466C8',
@@ -44,20 +45,20 @@ export default {
       },
       fontFamily: {
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
-        'inter': ['Inter', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
-        'noise': "url('/noise.png')",
+        noise: "url('/noise.png')",
         'gradient-mono': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
         'gradient-tekhelet': 'linear-gradient(135deg, #432371 0%, #714674 100%)',
         'gradient-tekhelet-vertical': 'linear-gradient(180deg, #432371 0%, #714674 100%)',
         'gradient-tekhelet-radial': 'radial-gradient(circle, #432371 0%, #714674 100%)',
       },
       animation: {
-        'grain': 'grain 8s steps(10) infinite',
-        'float': 'float 6s ease-in-out infinite',
+        grain: 'grain 8s steps(10) infinite',
+        float: 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'scroll': 'scroll 2s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        scroll: 'scroll 2s cubic-bezier(0.45, 0, 0.55, 1) infinite',
       },
       keyframes: {
         grain: {
@@ -87,4 +88,6 @@ export default {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
   ],
-}
+};
+
+export default config;

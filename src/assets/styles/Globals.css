@@ -42,8 +42,45 @@
     .btn-tertiary {
       @apply bg-transparent border border-[#CBB26A] text-[#CBB26A] hover:bg-[#CBB26A]/10;
     }
- }
 
+  .scroll-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: hidden;
+  }
+
+  .panel {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-container {
+    @apply relative w-full;
+  }
+
+  .vertical-scroll {
+    @apply min-h-screen w-full py-20;
+  }
+
+  .vertical-panel {
+    @apply w-full max-w-7xl mx-auto px-4 transition-all duration-500;
+  }
+
+  .horizontal-container {
+    @apply relative w-full overflow-hidden;
+  }
+
+  .horizontal-panel {
+    @apply relative h-screen w-screen;
+  }
+
+  .active {
+    @apply opacity-100 translate-y-0;
+  }
+}
 
 @layer utilities {
   .text-shadow {
@@ -89,4 +126,17 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

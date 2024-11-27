@@ -4,7 +4,9 @@ import { Code, Heart, LineChart, Shield } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const AboutPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,6 +42,29 @@ const AboutPage = () => {
     { name: "UI/UX Design", level: 85 },
     { name: "DevOps & Cloud", level: 88 },
     { name: "Security", level: 92 },
+  ];
+
+  const milestones = [
+    {
+      year: "Late 2023",
+      title: "The Spark",
+      description: "Nordic Code Works began as an idea, combining a passion for Scandinavian design principles with modern web development. The initial concept was sketched out, focusing on bringing minimalist, functional, and user-centered development to clients."
+    },
+    {
+      year: "Early 2024",
+      title: "Foundation & Planning",
+      description: "The groundwork was laid - establishing our core values, development methodology, and technical standards. We crafted our identity around the principles of clean code, security-first development, and exceptional user experiences."
+    },
+    {
+      year: "Spring 2024",
+      title: "Development Phase",
+      description: "Intensive period of building our infrastructure, setting up our development environment, and creating our first portfolio projects. Focus on implementing cutting-edge technologies while maintaining our commitment to Nordic design principles."
+    },
+    {
+      year: "Present",
+      title: "Launch",
+      description: "Nordic Code Works officially launches, ready to deliver high-quality web solutions. With our foundation in place, we're excited to begin our journey of creating impactful digital experiences for our clients."
+    }
   ];
 
   useEffect(() => {
@@ -151,16 +176,15 @@ const AboutPage = () => {
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center">Our Journey</h2>
           <div className="space-y-12">
-            {[2020, 2021, 2022, 2023].map((year, index) => (
+            {milestones.map((milestone, index) => (
               <div key={index} className="timeline-item relative pl-8 border-l-2 border-[#CBB26A]">
                 <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-[#CBB26A]" />
                 <div className="mb-2">
-                  <span className="text-[#CBB26A] font-bold text-xl">{year}</span>
+                  <span className="text-[#CBB26A] font-bold text-xl">{milestone.year}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Milestone {index + 1}</h3>
+                <h3 className="text-xl font-bold mb-2">{milestone.title}</h3>
                 <p className="text-gray-300">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {milestone.description}
                 </p>
               </div>
             ))}

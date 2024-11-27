@@ -68,7 +68,7 @@ const HomePage = () => {
           Crafting elegant digital solutions with Scandinavian simplicity
         </motion.p>
         <motion.button 
-          className="bg-[#137DC5] hover:bg-[#223651] text-white px-8 py-3 rounded-lg font-medium transition-colors"
+          className="magnetic bg-[#137DC5] hover:bg-[#223651] text-white px-8 py-3 rounded-lg font-medium transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
