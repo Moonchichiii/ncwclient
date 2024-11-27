@@ -2,8 +2,8 @@
 
 const config: Config = {
   content: [
-    './index.html',  // Ensure all paths to content are correct
-    './src/**/*.{js,ts,jsx,tsx}', // Scan your source files for class usage
+    './index.html',  
+    './src/**/*.{js,ts,jsx,tsx}', 
   ],
   theme: {
     extend: {

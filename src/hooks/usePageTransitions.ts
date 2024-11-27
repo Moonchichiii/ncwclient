@@ -10,31 +10,47 @@ export const usePageTransitions = (ref: React.RefObject<HTMLElement>) => {
     if (!element) return;
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    const currentRoute = location.pathname;
     
-    const getAnimationConfig = () => {
-      if (isMobile) return { y: 50, delay: 0.2 };
-      
-      switch(currentRoute) {
+    const getTransitionConfig = () => {
+      if (isMobile) {
+        return {
+          initial: { opacity: 0, y: 50 },
+          animate: { opacity: 1, y: 0 }
+        };
+      }
+
+      switch (location.pathname) {
         case '/home':
         case '/about':
-          return { x: '100%', delay: 0 };
+          return {
+            initial: { opacity: 0, x: '100%' },
+            animate: { opacity: 1, x: 0 }
+          };
         case '/portfolio':
         case '/contact':
-          return { y: 50, delay: 0.2 };
+          return {
+            initial: { opacity: 0, y: 50 },
+            animate: { opacity: 1, y: 0 }
+          };
         default:
-          return { y: 50, delay: 0 };
+          return {
+            initial: { opacity: 0, y: 50 },
+            animate: { opacity: 1, y: 0 }
+          };
       }
     };
 
-    const config = getAnimationConfig();
-    
-    gsap.from(element, {
-      opacity: 0,
-      ...config,
-      duration: 1,
-      ease: 'power2.out',
-      clearProps: 'all'
-    });
+    const config = getTransitionConfig();
+
+    gsap.fromTo(element, 
+      config.initial,
+      {
+        ...config.animate,
+        duration: 1,
+        ease: 'power2.out',
+        clearProps: 'all',
+        delay: 0.2
+      }
+    );
   }, [location.pathname]);
 };

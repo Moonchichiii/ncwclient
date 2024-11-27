@@ -140,3 +140,40 @@ html {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+html {
+  overflow-y: scroll;
+  height: 100dvh;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
+body {
+  overflow-y: visible;
+  position: relative;
+  height: unset;
+}
+
+html, body {
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.container {
+  width: 400%;
+  height: 100vh;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.panel {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}

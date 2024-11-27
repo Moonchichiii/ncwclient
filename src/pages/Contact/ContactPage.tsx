@@ -1,24 +1,28 @@
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
-import { Mail, Github, Linkedin, Send } from 'lucide-react';
+import { Mail, Github, Linkedin, Send, ArrowRight } from 'lucide-react';
+import { usePageTransitions } from '../../hooks/usePageTransitions';
 
-// Zod schema for validation
 const contactSchema = z.object({
-  user_name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  user_name: z.string().min(1, 'Name is required').max(100),
   user_email: z.string().email('Invalid email address'),
-  message: z.string().min(1, 'Message is required').max(500, 'Message is too long'),
+  message: z.string().min(1, 'Message is required').max(500),
   project_type: z.string().min(1, 'Project type is required'),
   budget: z.string().min(1, 'Budget is required'),
   timeline: z.string().min(1, 'Timeline is required'),
-  goals: z.string().min(1, 'Goals are required').max(500, 'Goals are too long'),
+  goals: z.string().min(1, 'Goals are required').max(500),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
 const ContactPage = () => {
+  const pageRef = useRef<HTMLDivElement>(null);
+  usePageTransitions(pageRef);
+
   const {
     register,
     handleSubmit,
@@ -31,206 +35,185 @@ const ContactPage = () => {
   const onSubmit = async (data: ContactFormData) => {
     try {
       await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         data,
         'YOUR_PUBLIC_KEY'
       );
-
-      console.log('Email sent successfully');
-      reset(); 
+      reset();
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Error:', error);
     }
   };
 
-  const inputClasses =
-    "w-full bg-[#223651] border border-[#343A40] rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#CBB26A] transition-colors";
+  const inputClasses = `
+    w-full bg-[#223651]/50 backdrop-blur-sm
+    border-2 border-[#343A40] rounded-xl px-6 py-4
+    text-white placeholder:text-gray-400/70
+    focus:outline-none focus:border-[#CBB26A] focus:ring-1 focus:ring-[#CBB26A]/50
+    transition-all duration-200
+  `;
 
   return (
-    <div className="min-h-screen bg-[#343A40] text-white py-20 px-4">
+    <div ref={pageRef} className="min-h-screen bg-[#343A40] text-white py-20 px-4 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
+      <div className="absolute inset-0 bg-gradient-radial from-[#223651]/20 to-transparent" />
+      
       <motion.div
-        className="max-w-4xl mx-auto"
+        className="relative max-w-5xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-5xl font-bold mb-8 text-center">
-          Let's <span className="text-[#CBB26A]">Connect</span>
-        </h1>
-        <p className="text-xl text-center text-gray-300 mb-12 max-w-2xl mx-auto">
-          Tell us about your project. The more details, the better!
-        </p>
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h1 className="text-6xl font-bold mb-6">
+            Let's <span className="text-[#CBB26A]">Connect</span>
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Ready to bring your vision to life? Share your project details with us.
+          </p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Form */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           <motion.form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6"
+            className="space-y-8 bg-[#223651]/30 backdrop-blur-md p-8 rounded-2xl border border-white/10"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ delay: 0.4 }}
           >
-            {/* Basic Info */}
-            <div>
-              <label htmlFor="user_name" className="block mb-2 font-medium">
-                Name
-              </label>
-              <input
-                type="text"
-                id="user_name"
-                {...register('user_name')}
-                className={`${inputClasses} ${errors.user_name && 'border-red-500'}`}
-                placeholder="Your Name"
-              />
-              {errors.user_name && (
-                <p className="text-red-500 mt-1">{errors.user_name.message}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="user_email" className="block mb-2 font-medium">
-                Email
-              </label>
-              <input
-                type="email"
-                id="user_email"
-                {...register('user_email')}
-                className={`${inputClasses} ${errors.user_email && 'border-red-500'}`}
-                placeholder="Your Email"
-              />
-              {errors.user_email && (
-                <p className="text-red-500 mt-1">{errors.user_email.message}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="message" className="block mb-2 font-medium">
-                Message
-              </label>
-              <textarea
-                id="message"
-                {...register('message')}
-                className={`${inputClasses} h-32 resize-none ${
-                  errors.message && 'border-red-500'
-                }`}
-                placeholder="Your Message"
-              />
-              {errors.message && (
-                <p className="text-red-500 mt-1">{errors.message.message}</p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Name</label>
+                <input
+                  {...register('user_name')}
+                  className={`${inputClasses} ${errors.user_name ? 'border-red-500' : ''}`}
+                  placeholder="John Doe"
+                />
+                {errors.user_name && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-2 text-sm text-red-400"
+                  >
+                    {errors.user_name.message}
+                  </motion.p>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Email</label>
+                <input
+                  {...register('user_email')}
+                  className={inputClasses}
+                  placeholder="john@example.com"
+                />
+              </div>
             </div>
 
-            {/* Project Details */}
             <div>
-              <label htmlFor="project_type" className="block mb-2 font-medium">
-                Project Type
-              </label>
-              <input
-                type="text"
-                id="project_type"
+              <label className="block mb-2 text-sm font-medium text-gray-300">Project Type</label>
+              <select
                 {...register('project_type')}
-                className={`${inputClasses} ${errors.project_type && 'border-red-500'}`}
-                placeholder="e.g., Web App, Mobile App"
-              />
-              {errors.project_type && (
-                <p className="text-red-500 mt-1">{errors.project_type.message}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="budget" className="block mb-2 font-medium">
-                Budget
-              </label>
-              <input
-                type="text"
-                id="budget"
-                {...register('budget')}
-                className={`${inputClasses} ${errors.budget && 'border-red-500'}`}
-                placeholder="e.g., $5,000 - $10,000"
-              />
-              {errors.budget && (
-                <p className="text-red-500 mt-1">{errors.budget.message}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="timeline" className="block mb-2 font-medium">
-                Timeline
-              </label>
-              <input
-                type="text"
-                id="timeline"
-                {...register('timeline')}
-                className={`${inputClasses} ${errors.timeline && 'border-red-500'}`}
-                placeholder="e.g., 2-3 months"
-              />
-              {errors.timeline && (
-                <p className="text-red-500 mt-1">{errors.timeline.message}</p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="goals" className="block mb-2 font-medium">
-                Project Goals
-              </label>
-              <textarea
-                id="goals"
-                {...register('goals')}
-                className={`${inputClasses} h-32 resize-none ${
-                  errors.goals && 'border-red-500'
-                }`}
-                placeholder="Describe your project's goals..."
-              />
-              {errors.goals && (
-                <p className="text-red-500 mt-1">{errors.goals.message}</p>
-              )}
+                className={`${inputClasses} appearance-none`}
+              >
+                <option value="">Select project type...</option>
+                <option value="web">Web Application</option>
+                <option value="mobile">Mobile App</option>
+                <option value="ecommerce">E-commerce</option>
+                <option value="other">Other</option>
+              </select>
             </div>
 
-            {/* Submit */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Budget</label>
+                <input
+                  {...register('budget')}
+                  className={inputClasses}
+                  placeholder="$5,000 - $10,000"
+                />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Timeline</label>
+                <input
+                  {...register('timeline')}
+                  className={inputClasses}
+                  placeholder="2-3 months"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-300">Message</label>
+              <textarea
+                {...register('message')}
+                className={`${inputClasses} h-32`}
+                placeholder="Tell us about your project..."
+              />
+            </div>
+
             <motion.button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#137DC5] hover:bg-[#223651] text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full group relative overflow-hidden rounded-xl bg-[#CBB26A] px-8 py-4 text-black font-medium"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Send size={20} />
-              {isSubmitting ? 'Sending...' : 'Send Message'}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-[#CBB26A] to-[#E6D5A7]"
+                initial={{ x: '100%' }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.3 }}
+              />
             </motion.button>
           </motion.form>
 
-          {/* Contact Information */}
           <motion.div
-            className="space-y-8"
+            className="space-y-12"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ delay: 0.6 }}
           >
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Connect With Us</h3>
-              <div className="space-y-4">
-                <a
-                  href="mailto:contact@nordiccodeworks.com"
-                  className="flex items-center gap-3 text-gray-300 hover:text-[#CBB26A] transition-colors"
-                >
-                  <Mail size={20} />
-                  contact@nordiccodeworks.com
-                </a>
-                <a
-                  href="https://github.com/nordiccodeworks"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-gray-300 hover:text-[#CBB26A] transition-colors"
-                >
-                  <Github size={20} />
-                  GitHub
-                </a>
-                <a
-                  href="https://linkedin.com/company/nordiccodeworks"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-gray-300 hover:text-[#CBB26A] transition-colors"
-                >
-                  <Linkedin size={20} />
-                  LinkedIn
-                </a>
+            <div className="bg-[#223651]/30 backdrop-blur-md p-8 rounded-2xl border border-white/10">
+              <h3 className="text-2xl font-bold mb-6">Connect With Us</h3>
+              <div className="space-y-6">
+                {[
+                  { icon: Mail, text: 'contact@nordiccodeworks.com', href: 'mailto:contact@nordiccodeworks.com' },
+                  { icon: Github, text: 'GitHub', href: 'https://github.com/nordiccodeworks' },
+                  { icon: Linkedin, text: 'LinkedIn', href: 'https://linkedin.com/company/nordiccodeworks' }
+                ].map((item, index) => (
+                  <motion.a
+                    key={index}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-gray-300 hover:text-[#CBB26A] transition-colors p-4 rounded-lg hover:bg-white/5"
+                    whileHover={{ x: 10 }}
+                  >
+                    <item.icon className="w-6 h-6" />
+                    <span>{item.text}</span>
+                  </motion.a>
+                ))}
               </div>
+            </div>
+
+            <div className="bg-[#223651]/30 backdrop-blur-md p-8 rounded-2xl border border-white/10">
+              <h3 className="text-2xl font-bold mb-4">Office Hours</h3>
+              <p className="text-gray-300">
+                Monday - Friday<br />
+                9:00 AM - 5:00 PM CET
+              </p>
             </div>
           </motion.div>
         </div>

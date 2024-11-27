@@ -1,27 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Code, Database, Globe } from 'lucide-react';
 import CookieConsent from '../../components/common/CookieConsent';
 import { Helmet } from 'react-helmet';
+import { usePageTransitions } from '../../hooks/usePageTransitions';
 
 const HomePage = () => {
-  // Show cookie consent after a short delay
+  const containerRef = useRef<HTMLDivElement>(null);
+  usePageTransitions(containerRef);
+
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
       const timer = setTimeout(() => {
-        // This will trigger the cookie consent animation
         localStorage.removeItem('cookie-consent');
-      }, 1000); // Adjust timing as needed
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, []);
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  };
 
   const services = [
     {
@@ -42,12 +38,12 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#343A40] text-white">
+    <div ref={containerRef} className="min-h-screen bg-[#343A40] text-white">
       <Helmet>
         <title>Home - Nordic Code Works</title>
         <meta name="description" content="Crafting elegant digital solutions with Scandinavian simplicity" />
       </Helmet>
-      {/* Hero Section */}
+
       <motion.section 
         className="h-screen flex flex-col items-center justify-center px-4 relative"
         initial={{ opacity: 0 }}
@@ -56,14 +52,18 @@ const HomePage = () => {
       >
         <motion.h1 
           className="text-6xl md:text-7xl font-bold mb-6 text-center font-space-grotesk"
-          {...fadeIn}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
           Nordic Code
           <span className="text-[#CBB26A]"> Works</span>
         </motion.h1>
         <motion.p 
           className="text-xl md:text-2xl text-center max-w-2xl mb-8 text-gray-300"
-          {...fadeIn}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           Crafting elegant digital solutions with Scandinavian simplicity
         </motion.p>
@@ -84,7 +84,6 @@ const HomePage = () => {
         </motion.div>
       </motion.section>
 
-      {/* Services Section */}
       <section className="py-20 px-4">
         <motion.div 
           className="max-w-6xl mx-auto"
@@ -116,7 +115,6 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      {/* Portfolio Teaser */}
       <section className="py-20 px-4 bg-[#2a3238]">
         <motion.div 
           className="max-w-6xl mx-auto"
@@ -153,7 +151,6 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      {/* Cookie Consent */}
       <CookieConsent />
     </div>
   );

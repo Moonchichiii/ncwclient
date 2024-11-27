@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Loader } from 'lucide-react';
 import useProjects from '../../hooks/useProjects';
+import { usePageTransitions } from '../../hooks/usePageTransitions';
 
 const categories = ['All', 'Frontend', 'Backend', 'Full Stack', 'UI/UX'];
 
 const PortfolioPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { projects, loading, error } = useProjects();
+  const pageRef = useRef<HTMLDivElement>(null);
+  
+  usePageTransitions(pageRef);
 
   const filteredProjects = projects?.results.filter(project =>
     selectedCategory === 'All' || project.tags.includes(selectedCategory)
   );
 
   return (
-    <div className="min-h-screen bg-[#343A40] text-white">
-      {/* Hero Section */}
+    <div ref={pageRef} className="min-h-screen bg-[#343A40] text-white">
       <section className="relative py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -30,7 +33,6 @@ const PortfolioPage = () => {
             Explore our portfolio of successful projects and digital solutions
           </p>
 
-          {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map((category) => (
               <motion.button
@@ -51,7 +53,6 @@ const PortfolioPage = () => {
         </motion.div>
       </section>
 
-      {/* Projects Grid */}
       <section className="px-4 pb-20">
         <div className="max-w-6xl mx-auto">
           {loading ? (
@@ -81,7 +82,6 @@ const PortfolioPage = () => {
                     exit={{ opacity: 0, y: 20 }}
                     className="group relative bg-[#223651] rounded-lg overflow-hidden"
                   >
-                    {/* Project Image */}
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={project.image}
@@ -90,7 +90,6 @@ const PortfolioPage = () => {
                       />
                     </div>
 
-                    {/* Project Info Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
                       <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                       <p className="text-gray-300 text-sm mb-4 line-clamp-2">
