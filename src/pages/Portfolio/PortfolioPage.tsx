@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Loader } from 'lucide-react';
 import useProjects from '../../hooks/useProjects';
-import { usePageTransitions } from '../../hooks/usePageTransitions';
 
 const categories = ['All', 'Frontend', 'Backend', 'Full Stack', 'UI/UX'];
 
@@ -10,15 +9,46 @@ const PortfolioPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { projects, loading, error } = useProjects();
   const pageRef = useRef<HTMLDivElement>(null);
-  
-  usePageTransitions(pageRef);
 
   const filteredProjects = projects?.results.filter(project =>
     selectedCategory === 'All' || project.tags.includes(selectedCategory)
   );
 
+  // Letter animation variants (matching landing page)
+  const letterVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 50
+      }
+    }
+  };
+
   return (
-    <div ref={pageRef} className="min-h-screen bg-[#343A40] text-white">
+    <div ref={pageRef} className="min-h-screen  text-white">
+      {/* Background Texture - Matching Landing Page */}
+      <div className="fixed inset-0">
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+            backgroundSize: '32px 32px'
+          }}
+        />
+      </div>
+
+      {/* Center Line - Matching Landing Page */}
+      <div 
+        className="fixed left-1/2 h-full w-[1px] opacity-20 top-0"
+        style={{
+          background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)'
+        }}
+      />
+
       <section className="relative py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -26,22 +56,52 @@ const PortfolioPage = () => {
           transition={{ duration: 0.6 }}
           className="max-w-6xl mx-auto text-center"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Our <span className="text-[#CBB26A]">Work</span>
+          {/* Title with landing page font styling */}
+          <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
+            <div className="block text-white overflow-hidden">
+              <motion.div className="flex justify-center">
+                {"nordic".split("").map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    variants={letterVariants}
+                    className="inline-block"
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
+            <div className="block text-white opacity-90 overflow-hidden">
+              <motion.div className="flex justify-center">
+                {"((works))".split("").map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    variants={letterVariants}
+                    className="inline-block"
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12">
-            Explore our portfolio of successful projects and digital solutions
-          </p>
+
+          <motion.p 
+            className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light mb-12"
+            variants={letterVariants}
+          >
+            Explore our portfolio of digital solutions
+          </motion.p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map((category) => (
               <motion.button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-6 py-2 rounded-full text-sm border ${
                   selectedCategory === category
-                    ? 'bg-[#CBB26A] text-black'
-                    : 'bg-[#223651] text-white hover:bg-[#2a4162]'
+                    ? 'border-white bg-white text-black'
+                    : 'border-white/20 text-white hover:border-white/40'
                 }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -80,7 +140,7 @@ const PortfolioPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="group relative bg-[#223651] rounded-lg overflow-hidden"
+                    className="group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
                   >
                     <div className="aspect-video overflow-hidden">
                       <img
@@ -90,7 +150,7 @@ const PortfolioPage = () => {
                       />
                     </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
                       <h3 className="text-xl font-bold mb-2">{project.title}</h3>
                       <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                         {project.description}
@@ -101,7 +161,7 @@ const PortfolioPage = () => {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 bg-[#CBB26A] rounded-full text-black"
+                            className="p-2 bg-white text-black rounded-full hover:bg-white/90"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >

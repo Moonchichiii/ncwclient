@@ -1,58 +1,79 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss';
+import forms from '@tailwindcss/forms';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   content: [
-    './index.html',  
-    './src/**/*.{js,ts,jsx,tsx}', 
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        // Monochromatic base
+        surface: {
+          dark: '#6a6969',
+          darker: '#131B2E',
+          lighter: '#223051',
+        },
         mono: {
-          50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
+          50: '#FFFFFF',
+          100: '#F4F4F4',
+          200: '#E1E2E2',
+          300: '#CACACA',
+          400: '#A3A3A3',
           500: '#737373',
           600: '#525252',
-          700: '#404040',
-          800: '#262626',
-          900: '#171717',
-          950: '#0a0a0a',
+          700: '#353535',
+          800: '#1F1F1F',
+          900: '#181818',
+          950: '#0F172A',
         },
-        // New gradient colors
+        accent: {
+          primary: '#FFE900',
+          'primary-light': '#F05E3F',
+          'primary-dark': '#D13315',
+          secondary: '#A3EA71',
+          'secondary-light': '#B4FF82',
+          'secondary-dark': '#8ED161',
+          tertiary: '#2628DD',
+          'tertiary-light': '#3F42FF',
+          'tertiary-dark': '#1D1FAD',
+          yellow: '#FFE900',
+          blue: '#2628DD',
+          neon: '#A3EA71',
+        },
+        metallic: {
+          light: '#CACACA',
+          base: '#A3A3A3',
+          dark: '#858585',
+        },
         tekhelet: {
-          base: '#432371',
+          base: '#2D1B69',
+          light: '#432371',
+          dark: '#1A103F',
           shade2: '#4B2972',
           shade3: '#522F72',
-          eminence: '#5A3573',
-          finn: '#623A73',
           shade4: '#694074',
           shade5: '#714674',
         },
-        // Accent colors
-        accent: {
-          gold: '#CBB26A',
-          blue: '#0466C8',
-          ice: '#E0F4FF',
-        },
-        // Semantic colors
-        success: '#4CAF50',
-        error: '#EF4444',
-        warning: '#F59E0B',
+        status: {
+          success: '#4CAF50',
+          error: '#EF4444',
+          warning: '#F59E0B',
+        }
       },
       fontFamily: {
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
-        noise: "url('/noise.png')",
-        'gradient-mono': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
-        'gradient-tekhelet': 'linear-gradient(135deg, #432371 0%, #714674 100%)',
-        'gradient-tekhelet-vertical': 'linear-gradient(180deg, #432371 0%, #714674 100%)',
-        'gradient-tekhelet-radial': 'radial-gradient(circle, #432371 0%, #714674 100%)',
+        'noise': "url('/noise.png')",
+        'gradient-dark': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
+        'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+        'gradient-tekhelet': 'linear-gradient(135deg, #2D1B69 0%, #714674 100%)',
+        'gradient-elegant': 'linear-gradient(to bottom right, #1A2238 0%, #131B2E 50%, #1A103F 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #E94823 0%, #F05E3F 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #A3EA71 0%, #B4FF82 100%)',
       },
       animation: {
         grain: 'grain 8s steps(10) infinite',
@@ -84,10 +105,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
-};
+  plugins: [forms, typography],
+} as const;
 
 export default config;

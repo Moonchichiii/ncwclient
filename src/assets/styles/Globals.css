@@ -4,57 +4,67 @@
 
 @layer base {
   body {
-    @apply bg-mono-950 text-mono-50 antialiased;
+    @apply bg-surface-dark text-mono-50 antialiased;
     font-feature-settings: "salt", "ss01", "cv01", "cv02", "cv03";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-space-grotesk;
+  }
+
+  h1 {
+    @apply text-4xl md:text-6xl lg:text-7xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold;
   }
 }
 
 @layer components {
+  /* Glass Effects */
   .glass-card {
-    @apply bg-mono-900/30 backdrop-blur-lg border border-mono-800/50 rounded-lg;
+    @apply bg-surface-lighter/30 backdrop-blur-lg border border-surface-dark/50 rounded-lg;
   }
   
   .glass-button {
-    @apply px-6 py-3 glass-card hover:bg-mono-800/30 transition-all duration-300 
+    @apply px-6 py-3 glass-card hover:bg-surface-dark/30 transition-all duration-300
            flex items-center gap-2 font-medium;
   }
 
+  /* Text Effects */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-mono-50 to-mono-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-primary-light;
   }
   
   .hover-glow {
-    @apply hover:shadow-[0_0_20px_rgba(203,178,106,0.15)] transition-shadow duration-300;
+    @apply hover:shadow-[0_0_20px_rgba(233,72,35,0.15)] transition-shadow duration-300;
   }
   
+  /* Button System */
   .btn {
-      @apply px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
-    }
+    @apply px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
+  }
   
-    .btn-primary {
-      @apply bg-[#CBB26A] text-black hover:bg-[#CBB26A]/90;
-    }
+  .btn-primary {
+    @apply bg-accent-primary text-white hover:bg-accent-primary-light;
+  }
   
-    .btn-secondary {
-      @apply bg-[#223651] text-white hover:bg-[#2a4162];
-    }
+  .btn-secondary {
+    @apply bg-accent-secondary text-surface-dark hover:bg-accent-secondary-light;
+  }
   
-    .btn-tertiary {
-      @apply bg-transparent border border-[#CBB26A] text-[#CBB26A] hover:bg-[#CBB26A]/10;
-    }
+  .btn-tertiary {
+    @apply bg-transparent border border-accent-tertiary text-accent-tertiary hover:bg-accent-tertiary/10;
+  }
 
+  /* Layout System */
   .scroll-container {
-    display: flex;
-    flex-direction: row;
-    overflow-x: hidden;
+    @apply flex flex-row overflow-x-hidden;
   }
 
   .panel {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @apply w-screen h-screen flex items-center justify-center;
   }
 
   .page-container {
@@ -80,11 +90,32 @@
   .active {
     @apply opacity-100 translate-y-0;
   }
+
+  /* Section Styles */
+  .section {
+    @apply py-20 px-4;
+  }
+
+  .section-inner {
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* Card System */
+  .card {
+    @apply bg-surface-lighter/50 backdrop-blur-md rounded-xl border border-surface-dark/30
+           p-6 transition-all duration-300 hover:border-accent-primary/30;
+  }
+
+  /* Container System */
+  .content-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }
 
 @layer utilities {
+  /* Shadows and Effects */
   .text-shadow {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 30px rgba(233, 72, 35, 0.3);
   }
 
   .text-shadow-sm {
@@ -94,18 +125,19 @@
   .text-shadow-lg {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   }
+
+  /* Gradients */
+  /* .bg-gradient-elegant {
+    @apply bg-gradient-to-br from-surface-dark via-surface-darker to-surface-lighter;
+  } */
 }
 
+/* Animations */
 @keyframes scroll {
   0% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(20px); opacity: 0; }
 }
 
-.animate-scroll {
-  animation: scroll 1.5s infinite;
-}
-
-/* Experimental animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
@@ -120,27 +152,18 @@
   90% { transform: translate(-3%, 15%) }
 }
 
+/* Animation Classes */
+.animate-scroll {
+  animation: scroll 1.5s infinite;
+}
+
 .animate-grain {
   animation: grain 8s steps(10) infinite;
 }
 
+/* Scroll Behavior */
 html {
   scroll-behavior: smooth;
-}
-
-.smooth-scroll {
-  scroll-behavior: smooth;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-html {
   overflow-y: scroll;
   height: 100dvh;
   -webkit-overflow-scrolling: touch;
@@ -158,22 +181,24 @@ html, body {
   margin: 0;
 }
 
+/* Scroll Utilities */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container System */
 .container {
   width: 400%;
   height: 100vh;
   display: flex;
   flex-wrap: nowrap;
-}
-
-.panel {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Smooth scrolling */
-.smooth-scroll {
-  scroll-behavior: smooth;
 }

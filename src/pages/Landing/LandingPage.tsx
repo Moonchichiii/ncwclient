@@ -1,180 +1,173 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useNavigate } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
-import { ArrowRight } from 'lucide-react';
-import { useLandingAnimations } from '../../hooks/useAnimation';
-
-// Type definitions for refs and props
-interface AnimationRefs {
-    containerRef: React.RefObject<HTMLDivElement>;
-    textRef: React.RefObject<HTMLDivElement>;
-    scrollProgress: React.RefObject<number>;
-    overlayRef: React.RefObject<HTMLDivElement>;
-}
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowDown, Clock } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
     const { setShowHeader } = useNavigation();
-    
+
+    const [times, setTimes] = useState<Record<string, Date>>({});
+    const [isLoaded, setIsLoaded] = useState(false);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
     const scrollProgress = useRef<number>(0);
     const overlayRef = useRef<HTMLDivElement>(null);
 
-    // Preload other pages and handle auto-navigation
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            if (scrollPosition > windowHeight * 0.5) {
+                navigate('/home');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [navigate]);
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                delayChildren: 0.3,
+                staggerChildren: 0.1,
+            },
+        },
+    };
+
+    const letterVariants = {
+        hidden: { y: 50, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                type: 'spring',
+                stiffness: 50,
+            },
+        },
+    };
+
+    useEffect(() => {
+        const updateTimes = () => {
+            const now = new Date();
+            setTimes({
+                stockholm: new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Stockholm' })),
+                newYork: new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' })),
+                london: new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' })),
+                tokyo: new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' })),
+            });
+        };
+
+        updateTimes();
+        const interval = setInterval(updateTimes, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const formatTime = (date?: Date) => {
+        return date?.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+    };
+
+    const nordicText = 'nordic'.split('');
+    const codeText = '((code) => works)'.split('');
+
     useEffect(() => {
         const routes = ['/home', '/about', '/portfolio', '/contact'];
-        routes.forEach(route => {
+        routes.forEach((route) => {
             const link = document.createElement('link');
             link.rel = 'prefetch';
             link.href = route;
             document.head.appendChild(link);
         });
 
-        const timer = setTimeout(() => {
-            navigate('/home');
-        }, 8000);
-
-        return () => clearTimeout(timer);
+        setTimeout(() => setIsLoaded(true), 500);
     }, [navigate]);
 
-    useLandingAnimations({
-        refs: {
-            containerRef,
-            textRef,
-            scrollProgress,
-            overlayRef,
-        },
-        onScroll: (progress: number) => {
-            if (progress > 0.5) {
-                navigate('/home');
-            }
-        },
-        onComplete: () => {},
-    });
-
-    const title = "Nordic Code".split('');
-
-    const ScrollIndicator: React.FC = () => (
-        <motion.div 
-            className="scroll-indicator absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 3 }}
-        >
-            <div className="relative w-1 h-12 md:h-16 overflow-hidden rounded-full bg-gradient-to-b from-tekhelet-base to-tekhelet-finn-3">
-                <motion.div 
-                    className="absolute top-0 w-full h-4 bg-white rounded-full"
-                    animate={{ y: ["0%", "100%"] }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                />
-            </div>
-            <span className="mt-2 md:mt-4 text-white/50 text-xs md:text-sm font-medium tracking-wider">
-                SCROLL TO ENTER
-            </span>
-        </motion.div>
-    );
-
     return (
-        <div ref={containerRef} className="bg-black text-white overflow-hidden min-h-screen">
-            {/* Loading Overlay */}
-            <div ref={overlayRef} className="fixed inset-0 z-50 flex">
-                {[...Array(5)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="overlay-slice flex-1 bg-gradient-to-b from-tekhelet-base to-tekhelet-finn-3 transform origin-bottom"
-                    />
-                ))}
-            </div>
+        <div ref={containerRef} className="bg-black text-white overflow-hidden min-h-screen relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-800 opacity-20 z-0" />
 
-            {/* Hero Section */}
-            <section className="hero-section min-h-screen flex items-center justify-center relative overflow-hidden px-4 md:px-6">
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
-                    {/* Responsive grid lines */}
-                    <div className="hidden md:block">
-                        {[...Array(20)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute w-px bg-gradient-to-b from-white/0 via-white/5 to-white/0"
-                                style={{
-                                    left: `${Math.random() * 100}%`,
-                                    height: '100%',
-                                    opacity: Math.random() * 0.3,
-                                }}
-                            />
-                        ))}
-                    </div>
-                    {/* Mobile-optimized grid lines */}
-                    <div className="block md:hidden">
-                        {[...Array(10)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute w-px bg-gradient-to-b from-white/0 via-white/5 to-white/0"
-                                style={{
-                                    left: `${Math.random() * 100}%`,
-                                    height: '100%',
-                                    opacity: Math.random() * 0.3,
-                                }}
-                            />
-                        ))}
-                    </div>
+            <div className="relative min-h-screen flex flex-col justify-center items-center px-4 landscape:justify-start landscape:pt-16">
+                <div className="absolute top-8 sm:top-10 md:top-12 left-6 sm:left-8 md:left-12 flex items-center gap-2 text-xs sm:text-sm landscape:top-4">
+                    <div className="w-8 sm:w-10 md:w-12 h-[1px] bg-white opacity-20" />
+                    <span>2024</span>
                 </div>
 
-                <div ref={textRef} className="text-center w-full max-w-4xl px-4 md:px-6 z-10">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-space-grotesk font-bold mb-4 md:mb-8">
-                        <div className="flex flex-wrap justify-center gap-x-2 md:gap-x-3">
-                            {title.map((char, i) => (
-                                <span key={i} className="title-char inline-block">
-                                    {char === " " ? "\u00A0" : char}
-                                </span>
-                            ))}
-                            <span className="title-char text-tekhelet-finn-3">Works</span>
+                <div className="absolute top-8 sm:top-10 md:top-12 right-6 sm:right-8 md:right-12 flex flex-col sm:flex-row flex-wrap justify-end items-end sm:items-center gap-3 sm:gap-6 md:gap-8 text-xs landscape:flex-row landscape:items-center landscape:top-4 landscape:gap-4">
+                    {[
+                        { city: 'STOCKHOLM', timeZone: 'stockholm' },
+                        { city: 'NEW YORK', timeZone: 'newYork' },
+                        { city: 'LONDON', timeZone: 'london' },
+                        { city: 'TOKYO', timeZone: 'tokyo' },
+                    ].map((location) => (
+                        <div key={location.city} className="flex items-center gap-2">
+                            <Clock size={12} className="text-white opacity-70" />
+                            <span className="text-white opacity-70 font-medium hidden sm:inline landscape:hidden">
+                                {location.city}
+                            </span>
+                            <span className="text-white opacity-70 font-medium sm:hidden landscape:inline">
+                                {location.city.slice(0, 3)}
+                            </span>
+                            <span className="text-white font-mono font-medium">
+                                {formatTime(times[location.timeZone])}
+                            </span>
+                            <div className="w-8 h-[1px] bg-white opacity-30" />
+                        </div>
+                    ))}
+                </div>
+
+                <motion.div ref={textRef} className="text-center w-full max-w-[90vw] mx-auto mb-8 landscape:mb-4 landscape:mt-8" variants={containerVariants} initial="hidden" animate="visible">
+                    <h1 className="text-[10vw] sm:text-[9vw] md:text-[8vw] lg:text-[7vw] font-mono leading-none tracking-tighter mb-4 landscape:text-[4vw] landscape:mb-2">
+                        <div className="block text-white overflow-hidden">
+                            <motion.div className="flex justify-center">
+                                {nordicText.map((letter, index) => (
+                                    <motion.span key={index} variants={letterVariants} className="inline-block">
+                                        {letter}
+                                    </motion.span>
+                                ))}
+                            </motion.div>
+                        </div>
+                        <div className="block text-white opacity-90 overflow-hidden">
+                            <motion.div className="flex justify-center">
+                                {codeText.map((letter, index) => (
+                                    <motion.span key={index} variants={letterVariants} className="inline-block">
+                                        {letter}
+                                    </motion.span>
+                                ))}
+                            </motion.div>
                         </div>
                     </h1>
-                    <p className="desc-text text-lg sm:text-xl md:text-2xl font-inter text-gray-400 mb-8 md:mb-12 leading-relaxed max-w-sm md:max-w-2xl mx-auto">
-                        Crafting digital experiences through minimalist design and innovative technology
-                    </p>
-                    <motion.button
-                        onClick={() => navigate('/home')}
-                        className="discover-btn group relative px-6 md:px-8 py-3 md:py-4 bg-transparent overflow-hidden border border-white/20 rounded-lg opacity-0 w-full sm:w-auto"
-                        whileHover="hover"
-                    >
-                        <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-tekhelet-base to-tekhelet-finn-3"
-                            initial={{ scaleX: 0 }}
-                            variants={{
-                                hover: {
-                                    scaleX: 1,
-                                    transition: { duration: 0.3, ease: 'easeInOut' },
-                                },
-                            }}
-                            style={{ originX: 0 }}
-                        />
-                        <motion.span
-                            className="relative flex items-center justify-center md:justify-start gap-2 font-medium text-sm md:text-base"
-                            variants={{
-                                hover: {
-                                    color: 'white',
-                                },
-                            }}
-                        >
-                            Enter Site
-                            <ArrowRight className="w-4 h-4" />
+
+                    <motion.div className="overflow-hidden landscape:mb-2" variants={letterVariants}>
+                        <p className="text-base sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light landscape:text-sm">
+                            Crafting digital solutions with Nordic precision
+                        </p>
+                    </motion.div>
+                </motion.div>
+
+                <motion.div className="flex flex-wrap justify-center gap-2 px-4 mb-8 landscape:mb-4 landscape:gap-1.5" variants={containerVariants} initial="hidden" animate="visible">
+                    {['React', 'Node.js', 'TypeScript', 'Python', 'Django'].map((tech) => (
+                        <motion.span key={tech} variants={letterVariants} className="text-xs px-3 py-1 rounded-full border border-white/20 text-gray-300 hover:border-white/40 transition-colors landscape:text-xs landscape:px-2 landscape:py-0.5" whileHover={{ scale: 1.05 }}>
+                            {tech}
                         </motion.span>
-                    </motion.button>
-                </div>
-                <ScrollIndicator />
-            </section>
+                    ))}
+                </motion.div>
+
+                <motion.div className="absolute bottom-6 w-full left-0 right-0 flex flex-col items-center justify-center gap-2 landscape:bottom-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.5 }}>
+                    <ArrowDown className="animate-bounce text-white w-5 mx-auto landscape:w-4" />
+                    <span className="text-xs uppercase tracking-widest text-gray-300 font-medium text-center w-full inline-block landscape:text-xs">
+                        Scroll Down
+                    </span>
+                </motion.div>
+            </div>
         </div>
     );
 };

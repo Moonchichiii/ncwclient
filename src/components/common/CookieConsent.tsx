@@ -20,7 +20,6 @@ const CookieConsent = () => {
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) {
-      // Small delay before showing for better UX
       const timer = setTimeout(() => setShow(true), 1000);
       return () => clearTimeout(timer);
     }
@@ -38,11 +37,6 @@ const CookieConsent = () => {
     setShow(false);
   };
 
-  const handleDecline = () => {
-    const basicSettings = { necessary: true, analytics: false, marketing: false };
-    localStorage.setItem('cookie-consent', JSON.stringify(basicSettings));
-    setShow(false);
-  };
 
   return (
     <AnimatePresence>
