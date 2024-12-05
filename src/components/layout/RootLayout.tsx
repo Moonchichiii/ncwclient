@@ -1,55 +1,58 @@
-import { FC } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import { useNavigation } from '../../context/NavigationContext';
-import { usePageAnimations } from '../../hooks/usePageAnimation';
+import { pageTransitions } from '../../utils/gsap-init';
 
-const RootLayout: FC = () => {
+const RootLayout = () => {
   const { showHeader } = useNavigation();
-  const { smoothWrapperRef, smoothContentRef } = usePageAnimations();
+  const location = useLocation();
+  const mainRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (!mainRef.current) return;
+
+    // Determine transition direction based on route
+    const direction = ['/portfolio', '/about'].includes(location.pathname) 
+      ? 'horizontal' 
+      : 'vertical';
+
+    pageTransitions.enterPage(mainRef.current, direction);
+  }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col relative bg-black text-white">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-800 opacity-20" />
+    <div className="min-h-screen flex flex-col">
+      {/* Background */}
+      <div className="fixed inset-0 bg-black pointer-events-none">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-            backgroundSize: '32px 32px'
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-800 opacity-20" />
       </div>
 
-      {/* Center Line */}
-      <div
-        className="fixed left-1/2 h-full w-[1px] opacity-20 top-0 pointer-events-none z-0"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)'
-        }}
-      />
-
-      {/* Header - Initially hidden */}
+      {/* Header */}
       {showHeader && (
-        <Header className="header relative z-10 transform -translate-y-full" />
+        <Header className="fixed top-0 left-0 right-0 z-header backdrop-blur-md" />
       )}
 
       {/* Main Content */}
-      <div className="flex-1 relative z-10">
-      <div id="smooth-wrapper" ref={smoothWrapperRef}>
-      <div id="smooth-content" ref={smoothContentRef}>
-        <main className="min-h-screen">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-      </div>
+      <main
+        ref={mainRef}
+        className="flex-1 relative"
+        style={{
+          paddingTop: showHeader ? '80px' : '0',
+        }}
+      >
+        <Outlet />
+      </main>
 
-      {/* Footer - Initially hidden */}
-      <Footer className="footer relative z-10 transform translate-y-full opacity-0" />
+      {/* Footer */}
+      <Footer className="relative z-base" />
     </div>
   );
 };

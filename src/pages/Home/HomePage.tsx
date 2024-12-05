@@ -116,14 +116,14 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      <section className="services-section py-20 px-4 backdrop-blur-sm">
+      <section className="services-section py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="service-item p-8 rounded-lg border border-white/10 hover:border-white/20 backdrop-blur-sm"
+                className="service-item p-8 rounded-lg border border-white/10 hover:border-white/20"
               >
                 <div className="text-white mb-4">{service.icon}</div>
                 <h3 className="text-xl font-bold mb-2 text-white">{service.title}</h3>
@@ -134,7 +134,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      <section className="projects-section py-20 px-4 backdrop-blur-sm">
+      <section className="projects-section py-20 px-4 ">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Featured Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

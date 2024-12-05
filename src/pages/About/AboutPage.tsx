@@ -111,7 +111,7 @@ const AboutPage: React.FC = () => {
   return (
     <div ref={containerRef} className="min-h-screen text-white">
       <section className="relative h-[80vh] overflow-hidden flex items-end pb-20">
-        <div ref={parallaxRef} className="absolute inset-0 backdrop-blur-sm" />
+        <div ref={parallaxRef} className="absolute inset-0" />
         <div className="relative z-10 text-center px-4 w-full">
           <div className="mx-auto max-w-6xl">
             <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
@@ -145,7 +145,7 @@ const AboutPage: React.FC = () => {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="backdrop-blur-sm border border-white/10 p-8 rounded-lg hover:border-white/20 transition-all"
+                className="border border-white/10 p-8 rounded-lg hover:border-white/20 transition-all"
               >
                 <div className="text-white mb-4">{value.icon}</div>
                 <h3 className="text-xl font-bold mb-2 text-white">{value.title}</h3>
@@ -156,7 +156,7 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="skills-section py-20 px-4 backdrop-blur-sm">
+      <section className="skills-section py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Expertise</h2>
           <div className="space-y-8">

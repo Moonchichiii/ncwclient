@@ -1,4 +1,3 @@
-// main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import App from './App';
 
-// Set up GSAP default configs after import
+
 gsap.defaults({
   ease: 'power2.out',
   duration: 0.7

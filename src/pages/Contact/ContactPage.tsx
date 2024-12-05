@@ -73,7 +73,7 @@ const ContactPage = () => {
   }, []);
 
   const inputClasses = `
-    w-full backdrop-blur-sm
+    w-full 
     border border-white/10 rounded-xl px-6 py-4
     text-white placeholder:text-gray-400/70
     focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20

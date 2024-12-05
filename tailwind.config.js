@@ -9,6 +9,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        base: '1',
+        header: '50',
+        overlay: '100',
+        modal: '200',
+      },
       colors: {
         surface: {
           dark: '#6a6969',
@@ -60,7 +66,7 @@ const config: Config = {
           success: '#4CAF50',
           error: '#EF4444',
           warning: '#F59E0B',
-        }
+        },
       },
       fontFamily: {
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
