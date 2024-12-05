@@ -132,6 +132,7 @@ const LandingPage: React.FC = () => {
   }, []);
 
   return (
+    <div id="landing-page" className="landing-page">
     <div ref={containerRef} className="bg-black text-white overflow-hidden min-h-screen relative">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-800 opacity-20 z-0" />
@@ -244,6 +245,8 @@ const LandingPage: React.FC = () => {
           </span>
         </div>
       </div>
+      <div className="end-marker" />
+    </div>
     </div>
   );
 };

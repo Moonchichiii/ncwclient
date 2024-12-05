@@ -198,6 +198,7 @@ const AboutPage: React.FC = () => {
           </div>
         </div>
       </section>
+      <div className="end-marker"></div>
     </div>
   );
 };

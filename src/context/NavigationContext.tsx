@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 type NavigationContextType = {
   showHeader: boolean;
@@ -9,6 +10,12 @@ const NavigationContext = createContext<NavigationContextType | undefined>(undef
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
   const [showHeader, setShowHeader] = useState(false);
+  const location = useLocation();
+
+  // Update header visibility based on route
+  useEffect(() => {
+    setShowHeader(location.pathname !== '/');
+  }, [location.pathname]);
 
   return (
     <NavigationContext.Provider value={{ showHeader, setShowHeader }}>

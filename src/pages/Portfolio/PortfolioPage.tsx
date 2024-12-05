@@ -37,7 +37,7 @@ const PortfolioPage = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate project items
+      // Animate project items each time the filteredProjects change
       gsap.from('.project-item', {
         opacity: 0,
         y: 20,
@@ -54,7 +54,7 @@ const PortfolioPage = () => {
       {/* Background Texture - Matching Landing Page */}
       <div className="fixed inset-0">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
-        <div 
+        <div
           className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
@@ -64,7 +64,7 @@ const PortfolioPage = () => {
       </div>
 
       {/* Center Line - Matching Landing Page */}
-      <div 
+      <div
         className="fixed left-1/2 h-full w-[1px] opacity-20 top-0"
         style={{
           background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)'
@@ -132,69 +132,54 @@ const PortfolioPage = () => {
               Failed to load projects. Please try again later.
             </div>
           ) : (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedCategory}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              >
-                {filteredProjects?.map((project) => (
-                  <motion.div
-                    key={project.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    className="project-item group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
-                  >
-                    <div className="aspect-video overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects?.map((project) => (
+                <div
+                  key={project.id}
+                  className="project-item group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
+                >
+                  <div className="aspect-video overflow-hidden">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
-                      <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                        {project.description}
-                      </p>
-                      <div className="flex items-center gap-4">
-                        {project.link && (
-                          <motion.a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 bg-white text-black rounded-full hover:bg-white/90"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <ExternalLink size={18} />
-                          </motion.a>
-                        )}
-                        <motion.a
-                          href={`https://github.com/nordiccodeworks/${project.id}`}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+                      {project.description}
+                    </p>
+                    <div className="flex items-center gap-4">
+                      {project.link && (
+                        <a
+                          href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 bg-white/10 rounded-full hover:bg-white/20"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                          className="p-2 bg-white text-black rounded-full hover:bg-white/90"
                         >
-                          <Github size={18} />
-                        </motion.a>
-                      </div>
+                          <ExternalLink size={18} />
+                        </a>
+                      )}
+                      <a
+                        href={`https://github.com/nordiccodeworks/${project.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-white/10 rounded-full hover:bg-white/20"
+                      >
+                        <Github size={18} />
+                      </a>
                     </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </section>
+      
+      <div className="end-marker"></div>
     </div>
   );
 };

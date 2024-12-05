@@ -126,7 +126,7 @@ const CookieConsent = () => {
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Cookie className="w-6 h-6 text-white/90" />
-              <h3 className="text-lg font-semibold text-white">Cookie Settings</h3>
+              <h3 className="text-lg font-semibold text-white shadow-sm">Cookie Settings</h3>
             </div>
             <button
               onClick={() => setShow(false)}
@@ -136,59 +136,65 @@ const CookieConsent = () => {
             </button>
           </div>
           
-          <p className="mt-4 text-white/80 leading-relaxed">
-            We use cookies to enhance your browsing experience and provide personalized content.
-            Your privacy matters to us.
-          </p>
+          <p className="mt-4 text-white/90 leading-relaxed shadow-sm">
+  We use cookies to enhance your browsing experience and provide personalized content.
+  Your privacy matters to us.
+</p>
 
           <div ref={detailsRef} style={{ height: 0, overflow: 'hidden' }}>
             {showDetails && (
               <div className="mt-4 space-y-4">
                 <div className="space-y-3">
-                  {[
-                    {
-                      id: 'necessary',
-                      title: 'Essential Cookies',
-                      description: 'Required for the website to function properly',
-                      icon: <Shield className="w-5 h-5" />,
-                      required: true
-                    },
-                    {
-                      id: 'analytics',
-                      title: 'Analytics Cookies',
-                      description: 'Help us improve our website by collecting anonymous usage data',
-                      icon: <Settings className="w-5 h-5" />
-                    },
-                    {
-                      id: 'marketing',
-                      title: 'Marketing Cookies',
-                      description: 'Used to deliver more relevant advertisements',
-                      icon: <Cookie className="w-5 h-5" />
-                    }
-                  ].map(({ id, title, description, icon, required }) => (
-                    <div key={id} className="flex items-start gap-4 p-3 rounded-lg bg-black/20">
-                      <div className="text-white/70">{icon}</div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-white">{title}</h4>
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={settings[id as keyof CookieSettings]}
-                              onChange={(e) => !required && setSettings(prev => ({
-                                ...prev,
-                                [id]: e.target.checked
-                              }))}
-                              disabled={required}
-                              className="sr-only peer"
-                            />
-                            <div className="w-11 h-6 bg-black/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-tekhelet-finn-3"></div>
-                          </label>
-                        </div>
-                        <p className="mt-1 text-sm text-white/60">{description}</p>
-                      </div>
-                    </div>
-                  ))}
+                {[
+                  {
+                    id: 'necessary',
+                    title: 'Essential Cookies',
+                    description: 'Required for the website to function properly',
+                    icon: <Shield className="w-5 h-5" />,
+                    required: true,
+                  },
+                  {
+                    id: 'analytics',
+                    title: 'Analytics Cookies',
+                    description: 'Help us improve our website by collecting anonymous usage data',
+                    icon: <Settings className="w-5 h-5" />,
+                  },
+                  {
+                    id: 'marketing',
+                    title: 'Marketing Cookies',
+                    description: 'Used to deliver more relevant advertisements',
+                    icon: <Cookie className="w-5 h-5" />,
+                  },
+                ].map(({ id, title, description, icon, required }) => (
+                  <div
+  key={id}
+  className="flex items-start gap-4 p-3 rounded-lg bg-black/80 backdrop-blur-md shadow-lg"
+>
+  <div className="text-white/70">{icon}</div>
+  <div className="flex-1">
+    <div className="flex items-center justify-between">
+      <h4 className="font-medium text-white">{title}</h4>
+      <label className="relative inline-flex items-center cursor-pointer">
+        <input
+          type="checkbox"
+          checked={settings[id as keyof CookieSettings]}
+          onChange={(e) =>
+            !required &&
+            setSettings((prev) => ({
+              ...prev,
+              [id]: e.target.checked,
+            }))
+          }
+          disabled={required}
+          className="sr-only peer"
+        />
+        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-tekhelet-finn-3"></div>
+      </label>
+    </div>
+    <p className="mt-1 text-sm text-white/70">{description}</p>
+  </div>
+</div>
+                ))}
                 </div>
               </div>
             )}
@@ -200,7 +206,7 @@ const CookieConsent = () => {
               onMouseEnter={handleButtonHover}
               onMouseLeave={handleButtonLeave}
               onMouseDown={handleButtonClick}
-              className="flex-1 px-4 py-2 bg-white text-tekhelet-base rounded-lg font-medium hover:bg-white/90 transition-colors"
+              className="flex-1 px-4 py-2 bg-white text-tekhelet-base rounded-lg font-medium hover:bg-white/70 transition-colors"
             >
               Accept All
             </button>

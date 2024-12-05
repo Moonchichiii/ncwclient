@@ -2,8 +2,10 @@ import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Code, Database, Globe } from 'lucide-react';
+import { useNavigation } from '../../context/NavigationContext';
 import Button from '../../components/shared/Button/Buttons';
 import CookieConsent from '../../components/common/CookieConsent';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,6 +17,7 @@ interface Service {
 
 const HomePage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { setShowHeader } = useNavigation();
 
   const services: Service[] = [
     {
@@ -36,6 +39,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      setShowHeader(true);
       gsap.from('.letter', {
         y: 50,
         opacity: 0,
@@ -67,10 +71,8 @@ const HomePage: React.FC = () => {
       });
     }, containerRef);
 
-    return () => {
-      ctx.revert();
-    };
-  }, []);
+    return () => ctx.revert();
+  }, [setShowHeader]);
 
   return (
     <div ref={containerRef} className="text-white min-h-screen">
@@ -167,6 +169,7 @@ const HomePage: React.FC = () => {
       />
 
       <CookieConsent />
+      <div className="end-marker"></div>
     </div>
   );
 };

@@ -2,8 +2,10 @@ import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import { NavigationProvider } from './context/NavigationContext';
-import { initSmoothScroll, ScrollTrigger } from './utils/gsap-init';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from 'gsap';
 
+// Lazy load components
 const RootLayout = lazy(() => import('./components/layout/RootLayout'));
 const LandingPage = lazy(() => import('./pages/Landing/LandingPage'));
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
@@ -21,32 +23,29 @@ const App = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Initialize smooth scroll
-    const smoother = initSmoothScroll();
+    // Register ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Cleanup on unmount
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      smoother?.kill();
+      // Clean up ScrollTriggers
+      ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
 
   return (
     <NavigationProvider>
-      <div id="smooth-wrapper" className="fixed inset-0 overflow-hidden">
-        <div id="smooth-content">
-          <Suspense fallback={<PageLoader />}>
-            <Routes location={location}>
-              <Route element={<RootLayout />}>
-                <Route index element={<LandingPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/portfolio" element={<PortfolioPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-              </Route>
-            </Routes>
-          </Suspense>
-        </div>
+      <div className="app-wrapper">
+        <Suspense fallback={<PageLoader />}>
+          <Routes location={location}>
+            <Route element={<RootLayout />}>
+              <Route index element={<LandingPage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </div>
     </NavigationProvider>
   );

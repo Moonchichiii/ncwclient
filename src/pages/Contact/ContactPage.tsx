@@ -270,6 +270,7 @@ const ContactPage = () => {
           </div>
         </div>
       </div>
+      <div className="end-marker"></div>
     </div>
   );
 };

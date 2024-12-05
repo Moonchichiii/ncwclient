@@ -1,36 +1,23 @@
-/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html, body {
-    @apply h-full w-full overflow-x-hidden bg-surface-darker text-mono-50 antialiased;
+    @apply h-full w-full antialiased bg-surface-darker text-mono-50;
     font-feature-settings: "salt", "ss01", "cv01", "cv02", "cv03";
   }
 
   #root {
-    @apply h-full;
+    @apply h-full w-full relative;
   }
 
-  #smooth-wrapper {
-    @apply overflow-hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    contain: content;
-  }
-
-  #smooth-content {
-    @apply min-h-full;
-  }
+  /* Remove smooth-wrapper and smooth-content styles as they conflict with GSAP */
 }
 
 @layer components {
   .page-container {
-    @apply relative min-h-screen w-full overflow-hidden;
+    @apply relative min-h-screen w-full;
   }
 
   .page-content {
@@ -44,10 +31,68 @@
   .section-inner {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+
+  /* Glass Effects */
+  .glass-card {
+    @apply bg-surface-lighter/30 backdrop-blur-lg border border-surface-dark/50 rounded-lg;
+  }
+
+  .glass-button {
+    @apply px-6 py-3 glass-card hover:bg-surface-dark/30 transition-all duration-300
+           flex items-center gap-2 font-medium;
+  }
+
+  /* Text Effects */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-primary-light;
+  }
+
+  .hover-glow {
+    @apply hover:shadow-[0_0_20px_rgba(233,72,35,0.15)] transition-shadow duration-300;
+  }
+
+  /* Button System */
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-accent-primary text-white hover:bg-accent-primary-light;
+  }
+
+  .btn-secondary {
+    @apply bg-accent-secondary text-surface-dark hover:bg-accent-secondary-light;
+  }
+
+  .btn-tertiary {
+    @apply bg-transparent border border-accent-tertiary text-accent-tertiary hover:bg-accent-tertiary/10;
+  }
+
+  /* Card System */
+  .card {
+    @apply bg-surface-lighter/50 backdrop-blur-md rounded-xl border border-surface-dark/30
+           p-6 transition-all duration-300 hover:border-accent-primary/30;
+  }
+
+  /* Page-specific styles */
+  .page-transition {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    will-change: transform, opacity;
+  }
+
+  .landing-page,
+  .home-page,
+  .portfolio-page,
+  .about-page,
+  .contact-page {
+    @apply relative min-h-screen;
+  }
 }
 
 @layer utilities {
-  /* Z-index utilities aligned with tailwind config */
+  /* Z-index utilities */
   .z-base { z-index: 1; }
   .z-header { z-index: 50; }
   .z-overlay { z-index: 100; }
@@ -59,15 +104,7 @@
     background-repeat: repeat;
   }
 
-  .bg-gradient-elegant {
-    /* @apply bg-gradient-to-br from-surface-darker via-surface-dark to-surface-lighter; */     i don't like that ontop of the pages makes them look weird! i love the style of the LandingPage! it's perfect! 
-  }
-
   /* Animation utilities */
-  .smooth-scroll {
-    scroll-behavior: smooth;
-  }
-
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
