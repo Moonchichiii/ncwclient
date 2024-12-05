@@ -1,5 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { createContext, useContext, useState } from 'react';
 
 type NavigationContextType = {
   showHeader: boolean;
@@ -10,16 +9,6 @@ const NavigationContext = createContext<NavigationContextType | undefined>(undef
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
   const [showHeader, setShowHeader] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    
-    if (location.pathname !== '/') {
-      setShowHeader(true);
-    } else {
-      setShowHeader(false);
-    }
-  }, [location.pathname]);
 
   return (
     <NavigationContext.Provider value={{ showHeader, setShowHeader }}>

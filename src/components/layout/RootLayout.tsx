@@ -1,38 +1,13 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { FC } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
-import { usePageAnimation } from '../../hooks/usePageAnimation';
-import gsap from 'gsap';
-import { ScrollTrigger, ScrollSmoother, SplitText, Flip } from 'gsap';
+import { useNavigation } from '../../context/NavigationContext';
+import { usePageAnimations } from '../../hooks/usePageAnimation';
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, Flip);
-
-const RootLayout = () => {
-  const { mainRef, isTransitioning } = usePageAnimation();
-  const location = useLocation();
-  const isContactPage = location.pathname === '/contact';
-
-  useEffect(() => {
-    // Initialize ScrollSmoother
-    const smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.5,
-      effects: true
-    });
-
-    // Footer animation timeline
-    if (isContactPage) {
-      gsap.fromTo('.footer-container',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.3 }
-      );
-    }
-
-    return () => {
-      smoother.kill();
-    };
-  }, [isContactPage]);
+const RootLayout: FC = () => {
+  const { showHeader } = useNavigation();
+  const { smoothWrapperRef, smoothContentRef } = usePageAnimations();
 
   return (
     <div className="min-h-screen flex flex-col relative bg-black text-white">
@@ -43,8 +18,8 @@ const RootLayout = () => {
         <div
           className="absolute inset-0 opacity-5"
           style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px',
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+            backgroundSize: '32px 32px'
           }}
         />
       </div>
@@ -53,34 +28,28 @@ const RootLayout = () => {
       <div
         className="fixed left-1/2 h-full w-[1px] opacity-20 top-0 pointer-events-none z-0"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)',
+          background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)'
         }}
       />
 
+      {/* Header - Initially hidden */}
+      {showHeader && (
+        <Header className="header relative z-10 transform -translate-y-full" />
+      )}
+
       {/* Main Content */}
-      <Header className="relative z-10" />
-      
       <div className="flex-1 relative z-10">
-        <div id="smooth-wrapper">
-          <div id="smooth-content">
-            <main
-              ref={mainRef}
-              className={`${isTransitioning ? 'opacity-80' : 'opacity-100'}`}
-            >
-              <div className="min-h-full">
-                <Outlet />
-              </div>
-            </main>
-          </div>
-        </div>
+      <div id="smooth-wrapper" ref={smoothWrapperRef}>
+      <div id="smooth-content" ref={smoothContentRef}>
+        <main className="min-h-screen">
+          <Outlet />
+        </main>
+      </div>
+    </div>
       </div>
 
-      {/* Footer */}
-      {isContactPage && (
-        <div className="footer-container relative z-10">
-          <Footer />
-        </div>
-      )}
+      {/* Footer - Initially hidden */}
+      <Footer className="footer relative z-10 transform translate-y-full opacity-0" />
     </div>
   );
 };

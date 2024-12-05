@@ -1,13 +1,22 @@
-import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronDown, Code, Database, Globe } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Code, Database, Globe } from 'lucide-react';
 import Button from '../../components/shared/Button/Buttons';
 import CookieConsent from '../../components/common/CookieConsent';
 
-const HomePage = () => {
+gsap.registerPlugin(ScrollTrigger);
+
+interface Service {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+}
+
+const HomePage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const services = [
+  const services: Service[] = [
     {
       icon: <Code size={24} />,
       title: 'Full-Stack Development',
@@ -25,8 +34,46 @@ const HomePage = () => {
     },
   ];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('.letter', {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: 'power4.out',
+      });
+
+      gsap.from('.service-item', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.services-section',
+          start: 'top 80%',
+        },
+      });
+
+      gsap.from('.project-item', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.projects-section',
+          start: 'top 80%',
+        },
+      });
+    }, containerRef);
+
+    return () => {
+      ctx.revert();
+    };
+  }, []);
+
   return (
-    <div ref={containerRef} className="text-white min-h-screen">    
+    <div ref={containerRef} className="text-white min-h-screen">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
         <div
@@ -38,115 +85,63 @@ const HomePage = () => {
         />
       </div>
 
-      <motion.section
-        className="h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
+      <section className="home-intro h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
         <div className="relative z-10 text-center space-y-12">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0, y: 50 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-            }}
-            className="space-y-8"
-          >
-            <motion.h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
+          <div className="space-y-8">
+            <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
               <div className="block text-white overflow-hidden">
-                <motion.div className="flex justify-center">
+                <div className="flex justify-center">
                   {'nordic'.split('').map((letter, index) => (
-                    <motion.span
-                      key={index}
-                      className="inline-block"
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
+                    <span key={index} className="letter inline-block">
                       {letter}
-                    </motion.span>
+                    </span>
                   ))}
-                </motion.div>
+                </div>
               </div>
               <div className="block text-white opacity-90 overflow-hidden">
-                <motion.div className="flex justify-center">
+                <div className="flex justify-center">
                   {'((code) => works)'.split('').map((letter, index) => (
-                    <motion.span
-                      key={index}
-                      className="inline-block"
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
+                    <span key={index} className="letter inline-block">
                       {letter}
-                    </motion.span>
+                    </span>
                   ))}
-                </motion.div>
+                </div>
               </div>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
+            <p className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light">
               Crafting digital solutions with Nordic precision
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
-      <section className="py-20 px-4 backdrop-blur-sm">
-        <motion.div
-          className="max-w-6xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+      <section className="services-section py-20 px-4 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="p-8 rounded-lg border border-white/10 hover:border-white/20 backdrop-blur-sm"
-                whileHover={{ y: -10 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
+                className="service-item p-8 rounded-lg border border-white/10 hover:border-white/20 backdrop-blur-sm"
               >
                 <div className="text-white mb-4">{service.icon}</div>
                 <h3 className="text-xl font-bold mb-2 text-white">{service.title}</h3>
                 <p className="text-gray-300">{service.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      <section className="py-20 px-4 backdrop-blur-sm">
-        <motion.div
-          className="max-w-6xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+      <section className="projects-section py-20 px-4 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Featured Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[1, 2].map((_, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="relative overflow-hidden rounded-lg aspect-video border border-white/10"
-                whileHover={{ scale: 1.02 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
+                className="project-item relative overflow-hidden rounded-lg aspect-video border border-white/10"
               >
                 <div className="absolute inset-0 flex items-center justify-center">
                   <img
@@ -158,10 +153,10 @@ const HomePage = () => {
                     <Button active={false}>View Project</Button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <div

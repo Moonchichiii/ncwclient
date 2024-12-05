@@ -1,34 +1,56 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ExternalLink, Github, Loader } from 'lucide-react';
 import useProjects from '../../hooks/useProjects';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const categories = ['All', 'Frontend', 'Backend', 'Full Stack', 'UI/UX'];
 
 const PortfolioPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { projects, loading, error } = useProjects();
-  const pageRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredProjects = projects?.results.filter(project =>
     selectedCategory === 'All' || project.tags.includes(selectedCategory)
   );
 
-  // Letter animation variants (matching landing page)
-  const letterVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 50
-      }
-    }
-  };
+  const nordicText = 'nordic'.split('');
+  const worksText = '((works))'.split('');
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Letter animations
+      gsap.from('.letter', {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: 'power4.out',
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Animate project items
+      gsap.from('.project-item', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.2,
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [filteredProjects]);
 
   return (
-    <div ref={pageRef} className="min-h-screen  text-white">
+    <div ref={containerRef} className="min-h-screen text-white">
       {/* Background Texture - Matching Landing Page */}
       <div className="fixed inset-0">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
@@ -50,52 +72,40 @@ const PortfolioPage = () => {
       />
 
       <section className="relative py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto text-center"
-        >
-          {/* Title with landing page font styling */}
+        <div className="max-w-6xl mx-auto text-center">
+          {/* Title */}
           <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
+            {/* "nordic" */}
             <div className="block text-white overflow-hidden">
-              <motion.div className="flex justify-center">
-                {"nordic".split("").map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    variants={letterVariants}
-                    className="inline-block"
-                  >
+              <div className="flex justify-center">
+                {nordicText.map((letter, index) => (
+                  <span key={index} className="letter inline-block">
                     {letter}
-                  </motion.span>
+                  </span>
                 ))}
-              </motion.div>
+              </div>
             </div>
+            {/* "((works))" */}
             <div className="block text-white opacity-90 overflow-hidden">
-              <motion.div className="flex justify-center">
-                {"((works))".split("").map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    variants={letterVariants}
-                    className="inline-block"
-                  >
+              <div className="flex justify-center">
+                {worksText.map((letter, index) => (
+                  <span key={index} className="letter inline-block">
                     {letter}
-                  </motion.span>
+                  </span>
                 ))}
-              </motion.div>
+              </div>
             </div>
           </h1>
 
-          <motion.p 
-            className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light mb-12"
-            variants={letterVariants}
-          >
+          {/* Subtitle */}
+          <p className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light mb-12">
             Explore our portfolio of digital solutions
-          </motion.p>
+          </p>
 
+          {/* Category Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map((category) => (
-              <motion.button
+              <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-6 py-2 rounded-full text-sm border ${
@@ -103,14 +113,12 @@ const PortfolioPage = () => {
                     ? 'border-white bg-white text-black'
                     : 'border-white/20 text-white hover:border-white/40'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 {category}
-              </motion.button>
+              </button>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section className="px-4 pb-20">
@@ -140,7 +148,7 @@ const PortfolioPage = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
+                    className="project-item group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
                   >
                     <div className="aspect-video overflow-hidden">
                       <img

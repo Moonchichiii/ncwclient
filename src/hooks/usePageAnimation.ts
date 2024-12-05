@@ -1,152 +1,77 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+// usePageAnimations.ts
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { debounce } from 'lodash';
+import { ScrollTrigger, ScrollSmoother } from 'gsap/all';
+import { useNavigation } from '../context/NavigationContext';
 
-// Constants
-const ROUTES = ['/home', '/portfolio', '/about', '/contact'];
-const TRANSITION_DELAY = 500;
-const SCROLL_THRESHOLD = 0.98;
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-interface PageAnimationConfig {
-  direction: 'horizontal' | 'vertical';
-  duration: number;
-  ease: string;
-}
+export const usePageAnimations = () => {
+  const { setShowHeader } = useNavigation();
+  const smoothWrapperRef = useRef<HTMLDivElement>(null);
+  const smoothContentRef = useRef<HTMLDivElement>(null);
+  const smoother = useRef<any>(null);
 
-export const usePageAnimation = () => {
-  const mainRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showFooter, setShowFooter] = useState(false);
+  useEffect(() => {
+    if (!smoothWrapperRef.current || !smoothContentRef.current) return;
 
-  // Determine animation direction based on route
-  const getAnimationConfig = (currentPath: string): PageAnimationConfig => {
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    
-    if (isMobile) {
-      return {
-        direction: 'vertical',
-        duration: 0.8,
-        ease: 'power2.inOut'
-      };
-    }
-
-    // Desktop animations
-    switch (currentPath) {
-      case '/home':
-      case '/portfolio':
-        return {
-          direction: 'horizontal',
-          duration: 1,
-          ease: 'power2.inOut'
-        };
-      case '/about':
-      case '/contact':
-        return {
-          direction: 'vertical',
-          duration: 0.8,
-          ease: 'power2.inOut'
-        };
-      default:
-        return {
-          direction: 'vertical',
-          duration: 0.8,
-          ease: 'power2.inOut'
-        };
-    }
-  };
-
-  // Handle page transitions
-  const handlePageTransition = (nextRoute: string) => {
-    if (!mainRef.current || isTransitioning) return;
-
-    setIsTransitioning(true);
-    const config = getAnimationConfig(location.pathname);
-    const element = mainRef.current.children[0];
-
-    gsap.timeline({
-      onComplete: () => {
-        navigate(nextRoute);
-        setIsTransitioning(false);
-        if (mainRef.current) {
-          mainRef.current.scrollTop = 0;
-        }
-      }
-    }).to(element, {
-      [config.direction === 'horizontal' ? 'x' : 'y']: '-100%',
-      opacity: 0,
-      duration: config.duration,
-      ease: config.ease
+    const smootherInstance = ScrollSmoother.create({
+      wrapper: smoothWrapperRef.current,
+      content: smoothContentRef.current,
+      smooth: 1.5,
+      effects: true,
+      normalizeScroll: true,
     });
-  };
 
-  // Handle scroll events
-  useEffect(() => {
-    const main = mainRef.current;
-    if (!main) return;
+    const sections = gsap.utils.toArray<HTMLElement>('section');
+    sections.forEach((section, index) => {
+      const isVertical = index === 0 || index === sections.length - 1;
 
-    const currentIndex = ROUTES.indexOf(location.pathname);
-    if (currentIndex === -1) return;
+      gsap.set(section, {
+        x: isVertical ? '0%' : (index % 2 === 0 ? '100%' : '-100%'),
+        y: isVertical ? '100%' : '0%',
+        opacity: 0,
+      });
 
-    let isScrolling = false;
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top bottom',
+        end: 'top center',
+        scrub: 1,
+        onEnter: () => gsap.to(section, { x: '0%', y: '0%', opacity: 1 }),
+        onLeaveBack: () => gsap.to(section, {
+          x: isVertical ? '0%' : (index % 2 === 0 ? '-100%' : '100%'),
+          y: isVertical ? '100%' : '0%',
+          opacity: 0,
+        }),
+      });
+    });
 
-    const handleScroll = debounce(() => {
-      if (isTransitioning || isScrolling || !main) return;
-
-      const { scrollHeight, scrollTop, clientHeight } = main;
-      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-      
-      // Show/hide footer based on scroll position
-      setShowFooter(scrollPercentage > 0.85);
-
-      // Handle page transition on scroll end
-      if (scrollPercentage >= SCROLL_THRESHOLD) {
-        const nextIndex = (currentIndex + 1) % ROUTES.length;
-        const nextRoute = ROUTES[nextIndex];
-        
-        // Only transition if we're not on the contact page
-        if (location.pathname !== '/contact') {
-          isScrolling = true;
-          handlePageTransition(nextRoute);
-        }
-      }
-    }, TRANSITION_DELAY);
-
-    main.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      main.removeEventListener('scroll', handleScroll);
-      handleScroll.cancel();
-    };
-  }, [location.pathname, navigate, isTransitioning]);
-
-  // Set up entry animations
-  useEffect(() => {
-    const element = mainRef.current?.children[0];
-    if (!element) return;
-
-    const config = getAnimationConfig(location.pathname);
-
-    gsap.fromTo(element,
-      {
-        [config.direction === 'horizontal' ? 'x' : 'y']: '100%',
-        opacity: 0
+    // Fix Header Animation
+    ScrollTrigger.create({
+      trigger: '.home-intro',
+      start: 'top top',
+      end: '+=200',
+      onEnter: () => {
+        setShowHeader(true);
+        gsap.to('.header', { y: 0, duration: 0.6, ease: 'power2.out' });
       },
-      {
-        [config.direction === 'horizontal' ? 'x' : 'y']: '0%',
-        opacity: 1,
-        duration: config.duration,
-        ease: config.ease,
-        clearProps: 'all'
-      }
-    );
-  }, [location.pathname]);
+      onLeaveBack: () => {
+        setShowHeader(false);
+        gsap.to('.header', { y: -100, duration: 0.6, ease: 'power2.in' });
+      },
+    });
+
+    return () => {
+      smootherInstance.kill();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [setShowHeader]);
 
   return {
-    mainRef,
-    isTransitioning,
-    showFooter
+    smoothWrapperRef,
+    smoothContentRef,
   };
 };
+
+export default usePageAnimations;

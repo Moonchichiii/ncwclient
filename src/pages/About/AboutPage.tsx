@@ -1,12 +1,22 @@
 import { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Code, Heart, LineChart, Shield } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Code, Heart, LineChart, Shield } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const values = [
+interface Value {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+}
+
+interface Skill {
+  name: string;
+  level: number;
+}
+
+const values: Value[] = [
   {
     icon: <Code size={32} />,
     title: "Clean Code",
@@ -29,7 +39,7 @@ const values = [
   },
 ];
 
-const skills = [
+const skills: Skill[] = [
   { name: "Frontend Development", level: 95 },
   { name: "Backend Architecture", level: 90 },
   { name: "UI/UX Design", level: 85 },
@@ -37,151 +47,117 @@ const skills = [
   { name: "Security", level: 92 },
 ];
 
-const AboutPage = () => {
+const AboutPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const parallaxRef = useRef<HTMLDivElement>(null);
 
-  const letterVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-      },
-    },
-  };
+  const nordicText = 'nordic'.split('');
+  const storyText = '((story))'.split('');
 
   useEffect(() => {
-    const createAnimations = () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    const ctx = gsap.context(() => {
+      // Parallax effect
+      gsap.to(parallaxRef.current, {
+        y: '50%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: parallaxRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
 
-      const ctx = gsap.context(() => {
-        gsap.from(".skill-bar", {
-          scaleX: 0,
-          duration: 1.5,
-          ease: "power4.out",
-          stagger: 0.2,
-          scrollTrigger: {
-            trigger: ".skills-section",
-            start: "top center",
-            toggleActions: "play none none reverse",
-          },
-        });
+      // Letter animations
+      gsap.from('.letter', {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: 'power4.out',
+      });
 
-        gsap.from(".timeline-item", {
-          opacity: 0,
-          y: 50,
-          duration: 1,
-          stagger: 0.3,
-          scrollTrigger: {
-            trigger: ".timeline-section",
-            start: "top center",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }, containerRef.current);
+      // Skill bar animations
+      gsap.from('.skill-bar', {
+        scaleX: 0,
+        transformOrigin: 'left center',
+        duration: 1.5,
+        ease: 'power4.out',
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.skills-section',
+          start: 'top center',
+          toggleActions: 'play none none reverse',
+        },
+      });
 
-      return ctx;
-    };
+      // Timeline item animations
+      gsap.from('.timeline-item', {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.3,
+        scrollTrigger: {
+          trigger: '.timeline-section',
+          start: 'top center',
+          toggleActions: 'play none none reverse',
+        },
+      });
+    }, containerRef);
 
-    const ctx = createAnimations();
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
-    <motion.div
-      ref={containerRef}
-      className="min-h-screen text-white"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div ref={containerRef} className="min-h-screen text-white">
       <section className="relative h-[80vh] overflow-hidden flex items-end pb-20">
-        <motion.div
-          style={{ y }}
-          className="absolute inset-0 backdrop-blur-sm"
-        />
+        <div ref={parallaxRef} className="absolute inset-0 backdrop-blur-sm" />
         <div className="relative z-10 text-center px-4 w-full">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false }}
-            className="mx-auto max-w-6xl"
-          >
+          <div className="mx-auto max-w-6xl">
             <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
               <div className="block text-white overflow-hidden">
-                <motion.div className="flex justify-center">
-                  {"nordic".split("").map((letter, index) => (
-                    <motion.span
-                      key={index}
-                      variants={letterVariants}
-                      className="inline-block"
-                    >
+                <div className="flex justify-center">
+                  {nordicText.map((letter, index) => (
+                    <span key={index} className="letter inline-block">
                       {letter}
-                    </motion.span>
+                    </span>
                   ))}
-                </motion.div>
+                </div>
               </div>
               <div className="block text-white opacity-90 overflow-hidden">
-                <motion.div className="flex justify-center">
-                  {"((story))".split("").map((letter, index) => (
-                    <motion.span
-                      key={index}
-                      variants={letterVariants}
-                      className="inline-block"
-                    >
+                <div className="flex justify-center">
+                  {storyText.map((letter, index) => (
+                    <span key={index} className="letter inline-block">
                       {letter}
-                    </motion.span>
+                    </span>
                   ))}
-                </motion.div>
+                </div>
               </div>
             </h1>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <section className="py-20 px-4">
-        <motion.div
-          className="max-w-6xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false }}
-        >
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {values.map((value, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="backdrop-blur-sm border border-white/10 p-8 rounded-lg hover:border-white/20 transition-all"
               >
                 <div className="text-white mb-4">{value.icon}</div>
                 <h3 className="text-xl font-bold mb-2 text-white">{value.title}</h3>
                 <p className="text-gray-300">{value.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section className="skills-section py-20 px-4 backdrop-blur-sm">
-        <motion.div
-          className="max-w-4xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false }}
-        >
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Expertise</h2>
           <div className="space-y-8">
             {skills.map((skill, index) => (
@@ -199,26 +175,16 @@ const AboutPage = () => {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section className="timeline-section py-20 px-4">
-        <motion.div
-          className="max-w-4xl mx-auto"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false }}
-        >
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Journey</h2>
           <div className="space-y-12">
             {[2020, 2021, 2022, 2023].map((year, index) => (
               <div key={index} className="timeline-item relative pl-8 border-l-2 border-white/20">
-                <motion.div
-                  className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: false }}
-                />
+                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white" />
                 <div className="mb-2">
                   <span className="text-white font-bold text-xl">{year}</span>
                 </div>
@@ -230,9 +196,9 @@ const AboutPage = () => {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
-    </motion.div>
+    </div>
   );
 };
 
