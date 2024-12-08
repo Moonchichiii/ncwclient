@@ -110,9 +110,9 @@ const Footer: React.FC = () => {
   return (
     <>
       <footer 
-      ref={footerRef}
-      className="relative bg-gradient-to-br from-purple-800 to-tekhelet-dark py-16 overflow-hidden"
-    >
+        ref={footerRef} 
+        className="relative bg-gradient-to-br from-surface-darker to-tekhelet-dark py-16 overflow-hidden"
+      >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5"
           style={{

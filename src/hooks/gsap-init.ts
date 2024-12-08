@@ -60,7 +60,7 @@ export const useGSAPSetup = () => {
 
       // **Horizontal Scroll Setup**
       const panels = gsap.utils.toArray('.panel');      
-      const panelEndMarkers = gsap.utils.toArray('.panel-end'); 
+      const panelEndMarkers = gsap.utils.toArray('.panel-end'); // Ensure these exist or remove snap
 
       const horizontalScroll = gsap.to(panelsContainer, {
         x: () => -(panelsContainer.scrollWidth - window.innerWidth),
@@ -78,7 +78,7 @@ export const useGSAPSetup = () => {
               const progress = value;
               const snapPoints = panelEndMarkers.length > 0
                 ? panelEndMarkers.map((_, i) => i / (panels.length - 1))
-                : panels.map((_, i) => i / (panels.length - 1)); 
+                : panels.map((_, i) => i / (panels.length - 1)); // Fallback if no markers
               const closest = snapPoints.reduce((prev, curr) =>
                 Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev
               );
