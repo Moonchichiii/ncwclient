@@ -20,22 +20,22 @@ const values: Value[] = [
   {
     icon: <Code size={32} />,
     title: "Clean Code",
-    description: "We believe in writing maintainable, scalable, and efficient code that stands the test of time.",
+    description: "We believe in writing maintainable, scalable, and efficient code.",
   },
   {
     icon: <Shield size={32} />,
     title: "Security First",
-    description: "Security is not an afterthought. We implement best practices from the ground up.",
+    description: "Security is not an afterthought.",
   },
   {
     icon: <Heart size={32} />,
     title: "User Focused",
-    description: "Every line of code we write is aimed at creating exceptional user experiences.",
+    description: "Exceptional user experiences from every line of code.",
   },
   {
     icon: <LineChart size={32} />,
     title: "Performance",
-    description: "We optimize every aspect to ensure blazing-fast performance across all devices.",
+    description: "Optimized for blazing-fast performance.",
   },
 ];
 
@@ -56,7 +56,6 @@ const AboutPage: React.FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Parallax effect
       gsap.to(parallaxRef.current, {
         y: '50%',
         ease: 'none',
@@ -68,7 +67,6 @@ const AboutPage: React.FC = () => {
         },
       });
 
-      // Letter animations
       gsap.from('.letter', {
         y: 50,
         opacity: 0,
@@ -77,7 +75,6 @@ const AboutPage: React.FC = () => {
         ease: 'power4.out',
       });
 
-      // Skill bar animations
       gsap.from('.skill-bar', {
         scaleX: 0,
         transformOrigin: 'left center',
@@ -91,7 +88,6 @@ const AboutPage: React.FC = () => {
         },
       });
 
-      // Timeline item animations
       gsap.from('.timeline-item', {
         opacity: 0,
         y: 50,
@@ -109,9 +105,12 @@ const AboutPage: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen text-white">
-      <section className="relative h-[80vh] overflow-hidden flex items-end pb-20">
-        <div ref={parallaxRef} className="absolute inset-0" />
+    <div ref={containerRef} className="about-page min-h-screen text-white relative z-0">
+      {/* Simple black background at z-[-1] */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none bg-black" />
+
+      <section className="relative h-[80vh] overflow-hidden flex items-end pb-20 z-10">
+        <div ref={parallaxRef} className="absolute inset-0 z-[-1]" />
         <div className="relative z-10 text-center px-4 w-full">
           <div className="mx-auto max-w-6xl">
             <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
@@ -138,7 +137,7 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 z-10 relative">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -156,7 +155,7 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="skills-section py-20 px-4">
+      <section className="skills-section py-20 px-4 z-10 relative">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Expertise</h2>
           <div className="space-y-8">
@@ -178,7 +177,7 @@ const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      <section className="timeline-section py-20 px-4">
+      <section className="timeline-section py-20 px-4 z-10 relative">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-16 text-center text-white">Our Journey</h2>
           <div className="space-y-12">
@@ -190,8 +189,7 @@ const AboutPage: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-white">Milestone {index + 1}</h3>
                 <p className="text-gray-300">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
               </div>
             ))}

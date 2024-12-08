@@ -1,24 +1,21 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+// NavigationContext.tsx
+import { createContext, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 type NavigationContextType = {
   showHeader: boolean;
-  setShowHeader: (show: boolean) => void;
 };
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
-  const [showHeader, setShowHeader] = useState(false);
   const location = useLocation();
 
-  // Update header visibility based on route
-  useEffect(() => {
-    setShowHeader(location.pathname !== '/');
-  }, [location.pathname]);
+  // Automatically determine if the header should be shown based on the route
+  const showHeader = location.pathname !== '/';
 
   return (
-    <NavigationContext.Provider value={{ showHeader, setShowHeader }}>
+    <NavigationContext.Provider value={{ showHeader }}>
       {children}
     </NavigationContext.Provider>
   );
@@ -26,8 +23,6 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
 
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
-  if (context === undefined) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
-  }
+  if (!context) throw new Error('useNavigation must be used within NavigationProvider');
   return context;
 };

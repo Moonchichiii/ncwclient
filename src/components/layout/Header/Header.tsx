@@ -35,7 +35,6 @@ const SocialLinks = () => {
 
     links.forEach((link) => {
       const el = link as HTMLElement;
-      
       const enterAnimation = gsap.to(el, {
         scale: 1.1,
         duration: 0.2,
@@ -69,14 +68,14 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { showHeader } = useNavigation();
-  
+
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Initialize header animation
+  // Animate header in on mount
   useEffect(() => {
     gsap.from(headerRef.current, {
       opacity: 0,
@@ -106,7 +105,6 @@ const Header: React.FC = () => {
     if (!mobileMenuRef.current) return;
 
     const tl = gsap.timeline({ paused: true });
-    
     tl.fromTo(mobileMenuRef.current,
       { opacity: 0, y: -10 },
       { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }
@@ -134,14 +132,14 @@ const Header: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
-  // Reset mobile menu state on route change
+  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
   const handleMenuButtonClick = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-    
+
     gsap.to(menuButtonRef.current, {
       scale: 0.9,
       duration: 0.1,
@@ -153,9 +151,11 @@ const Header: React.FC = () => {
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 w-full z-50 ${
-        showHeader ? 'bg-black/60 backdrop-blur-md border-b border-white/10' : ''
-      } transition-all`}
+      className={`fixed top-0 left-0 w-full transition-all duration-300 ${
+        showHeader
+          ? 'bg-black/80 backdrop-blur-md border-b border-white/20 shadow-lg'
+          : 'bg-transparent'
+      }`}
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -194,7 +194,7 @@ const Header: React.FC = () => {
 
           <button
             ref={menuButtonRef}
-            className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white transition-colors duration-300"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white transition-colors duration-300"
             onClick={handleMenuButtonClick}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
@@ -236,7 +236,7 @@ const Header: React.FC = () => {
                   </Link>
                 </div>
               ))}
-              <div 
+              <div
                 className="pt-4 border-t border-white/10"
                 ref={(el) => (menuItemsRef.current[navigationItems.length] = el)}
               >

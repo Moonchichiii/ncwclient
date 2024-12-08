@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       zIndex: {
-        base: '1',
+        base: '0',
         header: '50',
         overlay: '100',
         modal: '200',
@@ -36,17 +36,8 @@ const config: Config = {
         },
         accent: {
           primary: '#FFE900',
-          'primary-light': '#F05E3F',
-          'primary-dark': '#D13315',
           secondary: '#A3EA71',
-          'secondary-light': '#B4FF82',
-          'secondary-dark': '#8ED161',
           tertiary: '#2628DD',
-          'tertiary-light': '#3F42FF',
-          'tertiary-dark': '#1D1FAD',
-          yellow: '#FFE900',
-          blue: '#2628DD',
-          neon: '#A3EA71',
         },
         metallic: {
           light: '#CACACA',
@@ -57,10 +48,6 @@ const config: Config = {
           base: '#2D1B69',
           light: '#432371',
           dark: '#1A103F',
-          shade2: '#4B2972',
-          shade3: '#522F72',
-          shade4: '#694074',
-          shade5: '#714674',
         },
         status: {
           success: '#4CAF50',
@@ -69,15 +56,14 @@ const config: Config = {
         },
       },
       fontFamily: {
-        'space-grotesk': ['Space Grotesk', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        mono: ['Space Grotesk', 'monospace'],
       },
       backgroundImage: {
         'noise': "url('/noise.png')",
         'gradient-dark': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
         'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
         'gradient-tekhelet': 'linear-gradient(135deg, #2D1B69 0%, #714674 100%)',
-        'gradient-elegant': 'linear-gradient(to bottom right, #1A2238 0%, #131B2E 50%, #1A103F 100%)',
         'gradient-primary': 'linear-gradient(135deg, #E94823 0%, #F05E3F 100%)',
         'gradient-accent': 'linear-gradient(135deg, #A3EA71 0%, #B4FF82 100%)',
       },

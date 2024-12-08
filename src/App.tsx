@@ -1,11 +1,8 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import { NavigationProvider } from './context/NavigationContext';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import gsap from 'gsap';
 
-// Lazy load components
 const RootLayout = lazy(() => import('./components/layout/RootLayout'));
 const LandingPage = lazy(() => import('./pages/Landing/LandingPage'));
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
@@ -22,19 +19,9 @@ const PageLoader = () => (
 const App = () => {
   const location = useLocation();
 
-  useEffect(() => {
-    // Register ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
-
-    return () => {
-      // Clean up ScrollTriggers
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
-
   return (
     <NavigationProvider>
-      <div className="app-wrapper">
+      <div className="relative min-h-screen bg-surface-darker text-white">
         <Suspense fallback={<PageLoader />}>
           <Routes location={location}>
             <Route element={<RootLayout />}>

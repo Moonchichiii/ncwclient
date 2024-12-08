@@ -1,6 +1,8 @@
 {
   "name": "NordicCodeWorks",
-  "short_name": "NordicCodeWorks",
+  "short_name": "NordicCW",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/src/assets/favicon/web-app-manifest-192x192.png",

@@ -1,68 +1,78 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    
+
     <!-- Primary Meta Tags -->
     <title>Nordic Code Works - Digital Solutions</title>
     <meta name="title" content="Nordic Code Works - Digital Solutions" />
     <meta name="description" content="Crafting elegant digital solutions with Scandinavian simplicity. Expert web development, design, and digital transformation services." />
+    <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#223651" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://nordiccodeworks.com/" />
+    <meta property="og:url" content="http://localhost:5173/" />
     <meta property="og:title" content="Nordic Code Works - Digital Solutions" />
     <meta property="og:description" content="Crafting elegant digital solutions with Scandinavian simplicity. Expert web development, design, and digital transformation services." />
     <meta property="og:image" content="/og-image.png" />
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://nordiccodeworks.com/" />
+    <meta property="twitter:url" content="http://localhost:5173/" />
     <meta property="twitter:title" content="Nordic Code Works - Digital Solutions" />
     <meta property="twitter:description" content="Crafting elegant digital solutions with Scandinavian simplicity. Expert web development, design, and digital transformation services." />
     <meta property="twitter:image" content="/og-image.png" />
-    
-    <!-- Performance & Security -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Security & Performance -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://api.nordiccodeworks.com;" />
-    
+    <!-- Note: Adjust Content-Security-Policy based on your actual environment -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:5173 https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com data:;
+        img-src 'self' data: blob: https:;
+        connect-src 'self' http://localhost:8000 https://api.nordiccodeworks.com;
+        frame-ancestors 'self';
+        upgrade-insecure-requests;
+    " />
+
     <!-- PWA Support -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    
+
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/src/assets/favicon/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/src/assets/favicon/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/src/assets/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/src/assets/favicon/favicon-16x16.png" />
-    
-    <!-- Preload Critical Resources -->
+
+    <!-- Preconnect and Preload for Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    
+
     <!-- Fonts Fallback -->
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     </noscript>
-    
-    <!-- Preload Routes -->
+
+    <!-- Prefetch Routes for Smooth Client-Side Transitions -->
     <link rel="prefetch" href="/home" />
     <link rel="prefetch" href="/portfolio" />
     <link rel="prefetch" href="/about" />
     <link rel="prefetch" href="/contact" />
-    
-    <!-- App Entry Point -->
+
+    <!-- Application Entry Point: Ensure your dev server is accessible from localhost:5173 -->
     <script type="module" src="/src/main.tsx" defer></script>
 </head>
 <body class="bg-surface-dark antialiased">
     <div id="root"></div>
-    
+
     <!-- No-JS Fallback -->
     <noscript>
         <div class="flex min-h-screen items-center justify-center bg-surface-dark text-white p-4 text-center">

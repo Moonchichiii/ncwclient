@@ -9,108 +9,54 @@
   }
 
   #root {
-    @apply h-full w-full relative;
+    @apply h-full w-full relative overflow-x-hidden;
   }
-
-  /* Remove smooth-wrapper and smooth-content styles as they conflict with GSAP */
 }
 
 @layer components {
-  .page-container {
-    @apply relative min-h-screen w-full;
+  .root-layout {
+    @apply min-h-screen flex flex-col bg-surface-darker relative z-0;
   }
 
-  .page-content {
-    @apply relative z-base px-4 py-20 md:px-6 lg:px-8;
+  .site-main {
+    @apply flex-1 relative z-10;
   }
 
-  .section {
-    @apply relative py-20;
+  /* Header at topmost layer */
+  .site-header {
+    @apply fixed top-0 left-0 w-full transform -translate-y-full transition-transform duration-300 bg-black/80 backdrop-blur-sm;
+    z-index: 9999 !important;
   }
 
-  .section-inner {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  .site-header.visible {
+    @apply translate-y-0;
   }
 
-  /* Glass Effects */
-  .glass-card {
-    @apply bg-surface-lighter/30 backdrop-blur-lg border border-surface-dark/50 rounded-lg;
+  /* Footer also on top, but can be slightly lower than header if desired */
+  .site-footer {
+    @apply relative z-[9998];
   }
 
-  .glass-button {
-    @apply px-6 py-3 glass-card hover:bg-surface-dark/30 transition-all duration-300
-           flex items-center gap-2 font-medium;
+  .landing-page {
+    @apply relative min-h-[200vh];
   }
 
-  /* Text Effects */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-primary-light;
-  }
-
-  .hover-glow {
-    @apply hover:shadow-[0_0_20px_rgba(233,72,35,0.15)] transition-shadow duration-300;
-  }
-
-  /* Button System */
-  .btn {
-    @apply px-6 py-3 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors;
-  }
-
-  .btn-primary {
-    @apply bg-accent-primary text-white hover:bg-accent-primary-light;
-  }
-
-  .btn-secondary {
-    @apply bg-accent-secondary text-surface-dark hover:bg-accent-secondary-light;
-  }
-
-  .btn-tertiary {
-    @apply bg-transparent border border-accent-tertiary text-accent-tertiary hover:bg-accent-tertiary/10;
-  }
-
-  /* Card System */
-  .card {
-    @apply bg-surface-lighter/50 backdrop-blur-md rounded-xl border border-surface-dark/30
-           p-6 transition-all duration-300 hover:border-accent-primary/30;
-  }
-
-  /* Page-specific styles */
-  .page-transition {
-    position: relative;
-    min-height: 100vh;
-    width: 100%;
-    will-change: transform, opacity;
-  }
-
-  .landing-page,
   .home-page,
   .portfolio-page,
   .about-page,
   .contact-page {
-    @apply relative min-h-screen;
-  }
-}
-
-@layer utilities {
-  /* Z-index utilities */
-  .z-base { z-index: 1; }
-  .z-header { z-index: 50; }
-  .z-overlay { z-index: 100; }
-  .z-modal { z-index: 200; }
-
-  /* Background effects */
-  .bg-noise {
-    background-image: url('/noise.png');
-    background-repeat: repeat;
+    @apply relative min-h-screen pt-20;
   }
 
-  /* Animation utilities */
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .section {
+    @apply py-20;
   }
 
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
+  .section-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .glass-card {
+    @apply bg-surface-lighter/30 backdrop-blur-lg border border-surface-dark/50 rounded-lg;
   }
 }

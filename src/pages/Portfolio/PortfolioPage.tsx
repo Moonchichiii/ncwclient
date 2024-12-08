@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef, useEffect, useState } from 'react';
+import { gsap, ScrollTrigger } from '../../utils/gsap-init';
+import usePageAnimations from '../../hooks/usePageAnimation';
 import { ExternalLink, Github, Loader } from 'lucide-react';
 import useProjects from '../../hooks/useProjects';
 
@@ -20,29 +20,30 @@ const PortfolioPage = () => {
   const nordicText = 'nordic'.split('');
   const worksText = '((works))'.split('');
 
+  // Initial letter animations
+  usePageAnimations(containerRef, () => {
+    gsap.from('.letter', {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.05,
+      ease: 'power4.out',
+    });
+  });
+
+  // Batch project items animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Letter animations
-      gsap.from('.letter', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.05,
-        ease: 'power4.out',
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Animate project items each time the filteredProjects change
-      gsap.from('.project-item', {
-        opacity: 0,
-        y: 20,
-        duration: 0.5,
-        stagger: 0.2,
+      ScrollTrigger.batch('.project-item', {
+        onEnter: (batch) =>
+          gsap.from(batch, {
+            opacity: 0,
+            y: 20,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'power2.out',
+          }),
+        start: 'top 85%',
       });
     }, containerRef);
 
@@ -50,32 +51,20 @@ const PortfolioPage = () => {
   }, [filteredProjects]);
 
   return (
-    <div ref={containerRef} className="min-h-screen text-white">
-      {/* Background Texture - Matching Landing Page */}
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay" />
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }}
-        />
-      </div>
-
-      {/* Center Line - Matching Landing Page */}
+    <div ref={containerRef} className="portfolio-page min-h-screen text-white relative z-0">
+      {/* Simple backgrounds at z-[-1] */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none bg-[url('/noise.png')] opacity-5" />
       <div
-        className="fixed left-1/2 h-full w-[1px] opacity-20 top-0"
+        className="fixed inset-0 z-[-1] pointer-events-none opacity-5"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, white 30%, white 70%, transparent 100%)'
+          backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+          backgroundSize: '32px 32px'
         }}
       />
 
-      <section className="relative py-20 px-4">
+      <div className="relative py-20 px-4 z-10">
         <div className="max-w-6xl mx-auto text-center">
-          {/* Title */}
           <h1 className="text-[10vw] md:text-[8vw] font-mono leading-none mb-8 tracking-tighter">
-            {/* "nordic" */}
             <div className="block text-white overflow-hidden">
               <div className="flex justify-center">
                 {nordicText.map((letter, index) => (
@@ -85,7 +74,6 @@ const PortfolioPage = () => {
                 ))}
               </div>
             </div>
-            {/* "((works))" */}
             <div className="block text-white opacity-90 overflow-hidden">
               <div className="flex justify-center">
                 {worksText.map((letter, index) => (
@@ -97,12 +85,10 @@ const PortfolioPage = () => {
             </div>
           </h1>
 
-          {/* Subtitle */}
           <p className="text-2xl md:text-3xl text-gray-300 max-w-3xl mx-auto font-light mb-12">
             Explore our portfolio of digital solutions
           </p>
 
-          {/* Category Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map((category) => (
               <button
@@ -119,66 +105,62 @@ const PortfolioPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="px-4 pb-20">
-        <div className="max-w-6xl mx-auto">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <Loader className="w-8 h-8 animate-spin" />
-            </div>
-          ) : error ? (
-            <div className="text-center text-red-400">
-              Failed to load projects. Please try again later.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects?.map((project) => (
-                <div
-                  key={project.id}
-                  className="project-item group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
-                >
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
+      <div className="px-4 pb-20 z-10 relative max-w-6xl mx-auto">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <Loader className="w-8 h-8 animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="text-center text-red-400">
+            Failed to load projects. Please try again later.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects?.map((project) => (
+              <div
+                key={project.id}
+                className="project-item group relative backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden"
+              >
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title || 'Project image'}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
-                    <div className="flex items-center gap-4">
-                      {project.link && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 bg-white text-black rounded-full hover:bg-white/90"
-                        >
-                          <ExternalLink size={18} />
-                        </a>
-                      )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.description}</p>
+                  <div className="flex items-center gap-4">
+                    {project.link && (
                       <a
-                        href={`https://github.com/nordiccodeworks/${project.id}`}
+                        href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 bg-white/10 rounded-full hover:bg-white/20"
+                        className="p-2 bg-white text-black rounded-full hover:bg-white/90"
                       >
-                        <Github size={18} />
+                        <ExternalLink size={18} />
                       </a>
-                    </div>
+                    )}
+                    <a
+                      href={`https://github.com/nordiccodeworks/${project.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-white/10 rounded-full hover:bg-white/20"
+                    >
+                      <Github size={18} />
+                    </a>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-      
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="end-marker"></div>
     </div>
   );
