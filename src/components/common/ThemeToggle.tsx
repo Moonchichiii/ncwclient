@@ -10,14 +10,14 @@ const ThemeToggle: FC<ThemeToggleProps> = ({ position = 'landing' }) => {
   const { theme, toggleTheme } = useTheme();
 
   const positionClasses = position === 'landing'
-    ? 'absolute top-8 right-36'
+    ? 'absolute top-8 right-26'
     : 'relative';
 
   return (
     <button
       onClick={toggleTheme}
       className={`w-10 h-10 flex items-center justify-center ${positionClasses} rounded-full
-      bg-mono-800/50 backdrop-blur-sm hover:bg-mono-700/50 transition-colors`}
+       backdrop-blur-sm hover:bg-mono-700/50 transition-colors`}
       aria-label="Toggle theme"
     >
       {theme === 'dark' ?

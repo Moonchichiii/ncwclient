@@ -45,6 +45,7 @@ const config: Config = {
           light: '#432371',
           dark: '#1A103F',
         },
+        
         status: {
           success: '#4CAF50',
           error: '#EF4444',

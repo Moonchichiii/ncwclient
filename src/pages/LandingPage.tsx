@@ -159,7 +159,7 @@ const LandingPage: FC = () => {
           </p>
         </div>
 
-        <div className="tech-stack flex flex-wrap justify-center gap-6 mb-12">
+        <div className="tech-stack flex flex-wrap justify-center gap-6 mb-12 ">
           {['React', 'Node.js', 'TypeScript', 'Python', 'Django'].map((tech) => (
             <span key={tech} className="text-sm text-white/60 hover:text-white/80 transition-colors">
               {tech}
@@ -167,14 +167,7 @@ const LandingPage: FC = () => {
           ))}
         </div>
 
-        <button
-          onClick={() => navigate('/home')}
-          className="px-8 py-4 rounded-full border border-white/20 text-white hover:border-white/40 
-                   hover:bg-white/5 transition-all duration-300 transform hover:scale-105"
-        >
-          Explore Our Work
-        </button>
-      </div>
+              </div>
 
       {/* Side Links */}
       <div
@@ -192,10 +185,10 @@ const LandingPage: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span className="transform rotate-90 origin-bottom-left mb-1 tracking-wider">
+            <span className="transform rotate-90 origin-bottom-left mb-8 tracking-wider">
               {label}
             </span>
-            <Icon size={16} className="ml-1 group-hover:scale-110 transition-transform" />
+            <Icon size={20} className="group-hover:scale-110 transition-transform" />
           </a>
         ))}
       </div>

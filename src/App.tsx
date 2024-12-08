@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import { FC, lazy, Suspense } from 'react';
 import { useGSAPSetup } from './hooks/gsap-init';
 import LoadingSpinner from './components/common/LoadingSpinner';
