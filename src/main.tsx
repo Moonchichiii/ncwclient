@@ -1,17 +1,17 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import './utils/gsap-init';
-// import './assets/styles/globals.css';
-import './index.css';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 
+// Global styles
+import './assets/styles/Globals.css';
+
+// Create Query Client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      staleTime: 5 * 60 * 1000,
       cacheTime: 10 * 60 * 1000,
       retry: 1,
       refetchOnWindowFocus: false,
@@ -19,12 +19,14 @@ const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
+
+createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <App />
-        <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar />
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>

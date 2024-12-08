@@ -1,62 +1,207 @@
+/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base Styles */
 @layer base {
-  html, body {
-    @apply h-full w-full antialiased bg-surface-darker text-mono-50;
-    font-feature-settings: "salt", "ss01", "cv01", "cv02", "cv03";
+  *::before,
+  *::after {
+    @apply box-border m-0 p-0;
   }
 
-  #root {
-    @apply h-full w-full relative overflow-x-hidden;
+  html,
+  body {
+    @apply m-0 min-h-full font-light overflow-x-hidden bg-surface-darker text-white;
   }
 }
 
+/* Component Styles */
 @layer components {
-  .root-layout {
-    @apply min-h-screen flex flex-col bg-surface-darker relative z-0;
+  /* Layout Structure */
+  #page {
+    @apply relative min-h-screen bg-surface-darker overflow-x-hidden;
   }
 
-  .site-main {
-    @apply flex-1 relative z-10;
+  #smooth-wrapper {
+    @apply overflow-hidden;
   }
 
-  /* Header at topmost layer */
+  #smooth-content {
+    @apply min-h-screen;
+  }
+
+  /* Header */
   .site-header {
-    @apply fixed top-0 left-0 w-full transform -translate-y-full transition-transform duration-300 bg-black/80 backdrop-blur-sm;
-    z-index: 9999 !important;
+    @apply fixed top-0 left-0 right-0 z-header mix-blend-difference;
+    transition: opacity 0.5s ease, pointer-events 0.5s ease;
   }
 
-  .site-header.visible {
-    @apply translate-y-0;
+  /* Navigation */
+  .anchor-nav {
+    @apply fixed top-0 left-0 right-0 z-50 mix-blend-difference;
   }
 
-  /* Footer also on top, but can be slightly lower than header if desired */
-  .site-footer {
-    @apply relative z-[9998];
+  .anchor-nav a {
+    @apply relative text-white hover:text-white/80 transition-colors;
   }
 
-  .landing-page {
-    @apply relative min-h-[200vh];
+  .anchor-nav a.active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform origin-bottom-right;
   }
 
-  .home-page,
-  .portfolio-page,
-  .about-page,
-  .contact-page {
-    @apply relative min-h-screen pt-20;
+  .anchor-nav a.active:hover::after {
+    @apply scale-x-100 origin-bottom-left;
   }
 
-  .section {
-    @apply py-20;
+  /* Main Content */
+  .site-content {
+    @apply relative z-base min-h-screen;
+  }
+
+  /* Section Layouts */
+  .full-screen {
+    @apply flex flex-col items-center justify-center min-h-screen w-full relative overflow-hidden bg-surface-darker;
   }
 
   .section-content {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply relative z-10 container mx-auto px-4;
   }
 
-  .glass-card {
-    @apply bg-surface-lighter/30 backdrop-blur-lg border border-surface-dark/50 rounded-lg;
+
+  /* Panels System */
+  #panels {
+    @apply relative h-screen w-full overflow-hidden bg-surface-darker;
+    contain: paint;
   }
+
+  #panels-container {
+    @apply flex flex-row h-screen;
+    width: 500%;
+    transform: translate3d(0, 0, 0);
+    contain: paint;
+  }
+
+  .panel {
+    @apply w-screen h-screen flex-shrink-0 relative overflow-hidden bg-surface-darker;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    contain: paint;
+  }
+
+  /* Section Heights */
+  .portfolio-section,
+  .about-section {
+    @apply h-screen w-full relative bg-surface-darker;
+  }
+
+  .section-end {
+    @apply absolute bottom-0 left-0 w-full h-1 pointer-events-none opacity-0;
+  }
+
+  .panel-end {
+    @apply absolute bottom-0 right-0 w-1 h-full pointer-events-none opacity-0;
+  }
+
+  #intro > div,
+  #home > div,
+  #contact > div {
+    @apply min-h-screen;
+  }
+
+  /* Background Elements */
+  .bg-pattern {
+    @apply fixed inset-0 w-full h-full pointer-events-none opacity-5;
+    background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
+    background-size: 32px 32px;
+  }
+
+  .bg-gradient-overlay {
+    @apply absolute inset-0 pointer-events-none z-0;
+    background: linear-gradient(
+      to bottom,
+      rgba(45, 27, 105, 0.2) 0%,
+      transparent 100%
+    );
+  }
+
+  /* Footer */
+  #footer {
+    @apply relative z-[100] bg-surface-darker;
+    contain: paint;
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .animate-link {
+    @apply transition-colors duration-200;
+  }
+
+  .gpu {
+    @apply transform-gpu will-change-transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
+
+  .blend-difference {
+    @apply mix-blend-difference;
+  }
+
+  .blend-overlay {
+    @apply mix-blend-overlay;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+}
+
+/* Theme System */
+:root {
+  color-scheme: dark light;
+}
+
+:root[class~="dark"] {
+  color-scheme: dark;
+}
+
+:root[class~="light"] {
+  color-scheme: light;
+}
+
+.dark {
+  @apply bg-surface-darker text-white;
+}
+
+.light {
+  @apply bg-surface-lighter text-mono-900;
+}
+
+/* GSAP Markers */
+.gsap-marker-scroller-start,
+.gsap-marker-scroller-end {
+  @apply fixed z-[1000] text-white text-sm leading-none;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .anchor-nav {
+    @apply backdrop-blur-md bg-black/80;
+  }
+}
+
+/* Hide Scrollbar */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

@@ -18,20 +18,23 @@ const SocialLinks: FC = () => {
   const socialLinksRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const links = socialLinksRef.current?.querySelectorAll('.social-link');
-    if (!links) return;
+    const ctx = gsap.context(() => {
+      const links = document.querySelectorAll('.social-link');
+      
+      links.forEach(link => {
+        const animation = gsap.to(link, {
+          scale: 1.1,
+          duration: 0.2,
+          paused: true,
+          ease: 'power2.out'
+        });
 
-    links.forEach((link) => {
-      const el = link as HTMLElement;
-      const enterAnimation = gsap.to(el, {
-        scale: 1.1,
-        duration: 0.2,
-        paused: true,
+        link.addEventListener('mouseenter', () => animation.play());
+        link.addEventListener('mouseleave', () => animation.reverse());
       });
+    }, socialLinksRef);
 
-      el.addEventListener('mouseenter', () => enterAnimation.play());
-      el.addEventListener('mouseleave', () => enterAnimation.reverse());
-    });
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -68,62 +71,82 @@ const Header: FC<HeaderProps> = ({ className }) => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Header entrance animation
   useEffect(() => {
-    gsap.from(headerRef.current, {
-      opacity: 0,
-      y: -20,
-      duration: 0.5,
-      ease: 'power2.out',
-    });
+    const ctx = gsap.context(() => {
+      gsap.from(headerRef.current, {
+        opacity: 0,
+        y: -20,
+        duration: 0.6,
+        ease: 'power3.out'
+      });
+
+      // Initialize hover animation for logo
+      const logoAnimation = gsap.to(logoRef.current, {
+        scale: 1.05,
+        duration: 0.3,
+        paused: true,
+        ease: 'power2.out'
+      });
+
+      logoRef.current?.addEventListener('mouseenter', () => logoAnimation.play());
+      logoRef.current?.addEventListener('mouseleave', () => logoAnimation.reverse());
+    }, headerRef);
+
+    return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    const logo = logoRef.current;
-    if (!logo) return;
-
-    const hoverAnimation = gsap.to(logo, {
-      scale: 1.05,
-      duration: 0.3,
-      paused: true,
-    });
-
-    logo.addEventListener('mouseenter', () => hoverAnimation.play());
-    logo.addEventListener('mouseleave', () => hoverAnimation.reverse());
-  }, []);
-
+  // Mobile menu animations
   useEffect(() => {
     if (!mobileMenuRef.current) return;
 
-    const tl = gsap.timeline({ paused: true });
-    tl.fromTo(
-      mobileMenuRef.current,
-      { opacity: 0, y: -10 },
-      { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }
-    );
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ paused: true });
 
-    menuItemsRef.current.forEach((item, index) => {
-      if (item) {
-        tl.fromTo(
-          item,
-          { opacity: 0, x: -20 },
-          { opacity: 1, x: 0, duration: 0.2 },
-          index * 0.1
-        );
-      }
-    });
+      // Menu container animation
+      tl.fromTo(mobileMenuRef.current,
+        { 
+          opacity: 0,
+          y: -10,
+          clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)'
+        },
+        { 
+          opacity: 1,
+          y: 0,
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+          duration: 0.3,
+          ease: 'power3.out'
+        }
+      );
 
-    if (isMobileMenuOpen) {
-      tl.play();
-    } else {
-      gsap.to(mobileMenuRef.current, {
-        opacity: 0,
-        y: -10,
-        duration: 0.2,
-        ease: 'power2.in',
+      // Menu items animation
+      menuItemsRef.current.forEach((item, index) => {
+        if (item) {
+          tl.fromTo(item,
+            { opacity: 0, x: -20 },
+            { opacity: 1, x: 0, duration: 0.3 },
+            '-=0.1'
+          );
+        }
       });
-    }
+
+      if (isMobileMenuOpen) {
+        tl.play();
+      } else if (mobileMenuRef.current) {
+        gsap.to(mobileMenuRef.current, {
+          opacity: 0,
+          y: -10,
+          clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+          duration: 0.2,
+          ease: 'power2.in'
+        });
+      }
+    }, mobileMenuRef);
+
+    return () => ctx.revert();
   }, [isMobileMenuOpen]);
 
+  // Close mobile menu on location change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -136,6 +159,7 @@ const Header: FC<HeaderProps> = ({ className }) => {
       duration: 0.1,
       yoyo: true,
       repeat: 1,
+      ease: 'power2.inOut'
     });
   };
 
@@ -147,7 +171,12 @@ const Header: FC<HeaderProps> = ({ className }) => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center group" aria-label="Nordic Code Works - Home">
+          {/* Logo - Keeping exact same colors */}
+          <Link 
+            to="/" 
+            className="flex items-center group relative" 
+            aria-label="Nordic Code Works - Home"
+          >
             <div ref={logoRef} className="relative overflow-hidden font-mono tracking-tighter flex">
               <span className="text-2xl font-bold">
                 <span style={{ color: '#3BB4C5' }}>nordic</span>
@@ -161,14 +190,17 @@ const Header: FC<HeaderProps> = ({ className }) => {
             </div>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
             {navigationItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-medium transition-colors duration-300 hover:text-white ${
-                  location.pathname === item.path ? 'text-white font-bold' : 'text-gray-300'
-                }`}
+                className={`text-sm font-medium transition-all duration-300 hover:text-white 
+                  ${location.pathname === item.path 
+                    ? 'text-white font-bold scale-105' 
+                    : 'text-gray-300 hover:scale-105'
+                  }`}
                 aria-current={location.pathname === item.path ? 'page' : undefined}
               >
                 {item.label}
@@ -179,9 +211,11 @@ const Header: FC<HeaderProps> = ({ className }) => {
             </div>
           </nav>
 
+          {/* Mobile Menu Button */}
           <button
             ref={menuButtonRef}
-            className="md:hidden relative w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white transition-colors duration-300"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center 
+              text-gray-300 hover:text-white transition-colors duration-300"
             onClick={handleMenuButtonClick}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
@@ -192,6 +226,7 @@ const Header: FC<HeaderProps> = ({ className }) => {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div
           ref={mobileMenuRef}
@@ -199,7 +234,8 @@ const Header: FC<HeaderProps> = ({ className }) => {
           className="md:hidden fixed inset-x-0 top-20"
         >
           <nav
-            className="mx-4 rounded-xl bg-black/80 backdrop-blur-md shadow-lg border border-white/10"
+            className="mx-4 rounded-xl bg-black/90 backdrop-blur-md shadow-lg 
+              border border-white/10 transform-gpu"
             aria-label="Mobile navigation"
           >
             <div className="px-4 py-6 space-y-4">
@@ -211,9 +247,12 @@ const Header: FC<HeaderProps> = ({ className }) => {
                   <Link
                     to={item.path}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block py-2 text-base font-medium transition-colors duration-300 hover:text-white ${
-                      location.pathname === item.path ? 'text-white font-bold' : 'text-gray-300'
-                    }`}
+                    className={`block py-2 text-base font-medium transition-all duration-300 
+                      hover:text-white hover:translate-x-1 
+                      ${location.pathname === item.path 
+                        ? 'text-white font-bold' 
+                        : 'text-gray-300'
+                      }`}
                   >
                     {item.label}
                   </Link>
