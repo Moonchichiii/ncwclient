@@ -82,7 +82,7 @@ const ContactPage = () => {
 
   return (
     <div ref={containerRef} className="contact-page min-h-screen text-white py-20 px-4 relative overflow-hidden z-0">
-      {/* Background at z-[-1], no blending */}
+      {/* Background at z-[-1], no mix-blend-overlay */}
       <div className="fixed inset-0 z-[-1] pointer-events-none">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
         <div
@@ -133,13 +133,141 @@ const ContactPage = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="contact-form space-y-8 backdrop-blur-md p-8 rounded-2xl border border-white/10"
           >
-            {/* Form fields... */}
-            {/* (Same as above, unchanged) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Name</label>
+                <input
+                  {...register('user_name')}
+                  className={`${inputClasses} ${errors.user_name ? 'border-red-500' : ''}`}
+                  placeholder="John Doe"
+                />
+                {errors.user_name && (
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.user_name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Email</label>
+                <input
+                  {...register('user_email')}
+                  className={`${inputClasses} ${errors.user_email ? 'border-red-500' : ''}`}
+                  placeholder="john@example.com"
+                />
+                {errors.user_email && (
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.user_email.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-300">Project Type</label>
+              <select
+                {...register('project_type')}
+                className={`${inputClasses} appearance-none`}
+              >
+                <option value="">Select project type...</option>
+                <option value="web">Web Application</option>
+                <option value="mobile">Mobile App</option>
+                <option value="ecommerce">E-commerce</option>
+                <option value="other">Other</option>
+              </select>
+              {errors.project_type && (
+                <p className="mt-2 text-sm text-red-400">
+                  {errors.project_type.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Budget</label>
+                <input
+                  {...register('budget')}
+                  className={`${inputClasses} ${errors.budget ? 'border-red-500' : ''}`}
+                  placeholder="$5,000 - $10,000"
+                />
+                {errors.budget && (
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.budget.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Timeline</label>
+                <input
+                  {...register('timeline')}
+                  className={`${inputClasses} ${errors.timeline ? 'border-red-500' : ''}`}
+                  placeholder="2-3 months"
+                />
+                {errors.timeline && (
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.timeline.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-300">Message</label>
+              <textarea
+                {...register('message')}
+                className={`${inputClasses} h-32 ${errors.message ? 'border-red-500' : ''}`}
+                placeholder="Tell us about your project..."
+              />
+              {errors.message && (
+                <p className="mt-2 text-sm text-red-400">
+                  {errors.message.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full group relative overflow-hidden rounded-xl bg-white px-8 py-4 text-black font-medium"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white to-gray-100" />
+            </button>
           </form>
 
           <div className="contact-sidebar space-y-12">
-            {/* Sidebar with links... */}
-            {/* (Same as above, unchanged) */}
+            <div className="backdrop-blur-md p-8 rounded-2xl border border-white/10">
+              <h3 className="text-2xl font-bold mb-6">Connect With Us</h3>
+              <div className="space-y-6">
+                {[
+                  { icon: Mail, text: 'contact@nordiccodeworks.com', href: 'mailto:contact@nordiccodeworks.com' },
+                  { icon: Github, text: 'GitHub', href: 'https://github.com/nordiccodeworks' },
+                  { icon: Linkedin, text: 'LinkedIn', href: 'https://linkedin.com/company/nordiccodeworks' }
+                ].map((item, index) => (
+                  <a
+                    key={index}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors p-4 rounded-lg hover:bg-white/5"
+                  >
+                    <item.icon className="w-6 h-6" />
+                    <span>{item.text}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="backdrop-blur-md p-8 rounded-2xl border border-white/10">
+              <h3 className="text-2xl font-bold mb-4">Office Hours</h3>
+              <p className="text-gray-300">
+                Monday - Friday<br />
+                9:00 AM - 5:00 PM CET
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,4 @@
-// NavigationContext.tsx
-import { createContext, useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { createContext, useContext, FC } from 'react';
 
 type NavigationContextType = {
   showHeader: boolean;
@@ -8,11 +6,9 @@ type NavigationContextType = {
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
-export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
-  const location = useLocation();
-
-  // Automatically determine if the header should be shown based on the route
-  const showHeader = location.pathname !== '/';
+export const NavigationProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Always show header for simplicity
+  const showHeader = true;
 
   return (
     <NavigationContext.Provider value={{ showHeader }}>

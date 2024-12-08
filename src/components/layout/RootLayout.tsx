@@ -1,18 +1,13 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { FC } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
-import { useNavigation } from '../../context/NavigationContext';
 
-const RootLayout: React.FC = (): JSX.Element => {
-  const { showHeader } = useNavigation();
-  const location = useLocation();
-
-  console.log('showHeader:', showHeader, 'path:', location.pathname); // Debug line
-
+const RootLayout: FC = () => {
   return (
     <div className="root-layout">
-      <Header className={`site-header ${showHeader ? 'visible' : ''}`} />
+      {/* Always visible header */}
+      <Header className="site-header visible" />
       <main className="site-main">
         <Outlet />
       </main>

@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from 'react';
 import gsap from 'gsap';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin } from 'lucide-react';
-import { useNavigation } from '../../../context/NavigationContext';
+
+interface HeaderProps {
+  className?: string;
+}
 
 const navigationItems = [
   { path: '/home', label: 'Home' },
@@ -11,22 +14,7 @@ const navigationItems = [
   { path: '/contact', label: 'Contact' },
 ];
 
-const socialLinks = [
-  {
-    platform: 'GitHub',
-    url: 'https://github.com/nordiccodeworks',
-    icon: Github,
-    ariaLabel: 'Visit our GitHub profile',
-  },
-  {
-    platform: 'LinkedIn',
-    url: 'https://linkedin.com/company/nordiccodeworks',
-    icon: Linkedin,
-    ariaLabel: 'Visit our LinkedIn page',
-  },
-];
-
-const SocialLinks = () => {
+const SocialLinks: FC = () => {
   const socialLinksRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,26 +36,31 @@ const SocialLinks = () => {
 
   return (
     <div ref={socialLinksRef} className="flex items-center gap-4">
-      {socialLinks.map(({ platform, url, icon: Icon, ariaLabel }) => (
-        <a
-          key={platform}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="social-link text-gray-300 hover:text-white transition-colors duration-300"
-          aria-label={ariaLabel}
-        >
-          <Icon size={20} strokeWidth={1.5} />
-        </a>
-      ))}
+      <a
+        href="https://github.com/nordiccodeworks"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="social-link text-gray-300 hover:text-white transition-colors duration-300"
+        aria-label="GitHub"
+      >
+        <Github size={20} strokeWidth={1.5} />
+      </a>
+      <a
+        href="https://linkedin.com/company/nordiccodeworks"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="social-link text-gray-300 hover:text-white transition-colors duration-300"
+        aria-label="LinkedIn"
+      >
+        <Linkedin size={20} strokeWidth={1.5} />
+      </a>
     </div>
   );
 };
 
-const Header: React.FC = () => {
+const Header: FC<HeaderProps> = ({ className }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { showHeader } = useNavigation();
 
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
@@ -75,7 +68,6 @@ const Header: React.FC = () => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Animate header in on mount
   useEffect(() => {
     gsap.from(headerRef.current, {
       opacity: 0,
@@ -85,7 +77,6 @@ const Header: React.FC = () => {
     });
   }, []);
 
-  // Logo hover animation
   useEffect(() => {
     const logo = logoRef.current;
     if (!logo) return;
@@ -100,19 +91,20 @@ const Header: React.FC = () => {
     logo.addEventListener('mouseleave', () => hoverAnimation.reverse());
   }, []);
 
-  // Mobile menu animations
   useEffect(() => {
     if (!mobileMenuRef.current) return;
 
     const tl = gsap.timeline({ paused: true });
-    tl.fromTo(mobileMenuRef.current,
+    tl.fromTo(
+      mobileMenuRef.current,
       { opacity: 0, y: -10 },
       { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }
     );
 
     menuItemsRef.current.forEach((item, index) => {
       if (item) {
-        tl.fromTo(item,
+        tl.fromTo(
+          item,
           { opacity: 0, x: -20 },
           { opacity: 1, x: 0, duration: 0.2 },
           index * 0.1
@@ -132,7 +124,6 @@ const Header: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -151,16 +142,12 @@ const Header: React.FC = () => {
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 w-full transition-all duration-300 ${
-        showHeader
-          ? 'bg-black/80 backdrop-blur-md border-b border-white/20 shadow-lg'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md border-b border-white/20 shadow-lg ${className}`}
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link to="/home" className="flex items-center group" aria-label="Nordic Code Works - Home">
+          <Link to="/" className="flex items-center group" aria-label="Nordic Code Works - Home">
             <div ref={logoRef} className="relative overflow-hidden font-mono tracking-tighter flex">
               <span className="text-2xl font-bold">
                 <span style={{ color: '#3BB4C5' }}>nordic</span>
@@ -200,11 +187,7 @@ const Header: React.FC = () => {
             aria-controls="mobile-menu"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMobileMenuOpen ? (
-              <X size={24} strokeWidth={1.5} />
-            ) : (
-              <Menu size={24} strokeWidth={1.5} />
-            )}
+            {isMobileMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
           </button>
         </div>
       </div>
