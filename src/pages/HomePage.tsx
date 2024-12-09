@@ -94,7 +94,7 @@ const HomePage: FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative min-h-screen w-full bg-surface-darker text-white">
+    <div ref={containerRef} id="home" className="relative min-h-screen w-full bg-surface-darker text-white">
       {/* Background Pattern */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-5"

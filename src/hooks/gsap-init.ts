@@ -1,5 +1,3 @@
-// src/hooks/gsap-init.ts
-
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -36,7 +34,7 @@ export const useGSAPSetup = () => {
         end: "#contact top center",
         markers: true,
         onUpdate: (self) => {
-          if (self.direction === 1) { // Scrolling down
+          if (self.direction === 1) { 
             if (self.progress > 0) {
               gsap.to(header, {
                 opacity: 1,
