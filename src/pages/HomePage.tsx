@@ -58,7 +58,6 @@ const HomePage: FC = () => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Hero section animations
       const heroTl = gsap.timeline();
       heroTl.from('.title-letter', {
         opacity: 0,
@@ -74,7 +73,6 @@ const HomePage: FC = () => {
         ease: 'power3.out'
       }, '-=0.5');
 
-      // Services section animations
       ScrollTrigger.batch('.service-card', {
         start: 'top 85%',
         onEnter: (batch) => {
@@ -95,7 +93,6 @@ const HomePage: FC = () => {
 
   return (
     <div ref={containerRef} id="home" className="relative min-h-screen w-full bg-surface-darker text-white">
-      {/* Background Pattern */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-5"
           style={{
@@ -105,7 +102,6 @@ const HomePage: FC = () => {
         />
       </div>
 
-      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-[clamp(2.5rem,8vw,6rem)] font-mono leading-none mb-8">
@@ -127,7 +123,6 @@ const HomePage: FC = () => {
         </div>
       </section>
 
-      {/* Services Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">

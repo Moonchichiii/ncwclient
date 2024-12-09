@@ -62,7 +62,6 @@ const AboutPage: FC = () => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Hero section animations
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -77,7 +76,6 @@ const AboutPage: FC = () => {
         { y: "30%", ease: "none" }
       );
 
-      // Values cards animation
       gsap.from('.value-card', {
         opacity: 0,
         y: 50,
@@ -90,7 +88,6 @@ const AboutPage: FC = () => {
         }
       });
 
-      // Skills animation
       gsap.from('.skill-bar', {
         scaleX: 0,
         duration: 1.5,
@@ -102,7 +99,6 @@ const AboutPage: FC = () => {
         }
       });
 
-      // Timeline animation
       gsap.from('.timeline-item', {
         opacity: 0,
         x: -50,
@@ -120,7 +116,6 @@ const AboutPage: FC = () => {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-surface-darker text-white overflow-x-hidden">
-      {/* Hero Section with Parallax */}
       <section className="relative h-screen flex items-center">
         <div className="absolute inset-0 overflow-hidden">
           <div
@@ -146,7 +141,6 @@ const AboutPage: FC = () => {
         </div>
       </section>
 
-      {/* Values Section */}
       <section className="values-section py-20 relative z-10">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-16">Our Values</h2>
@@ -172,7 +166,6 @@ const AboutPage: FC = () => {
         </div>
       </section>
 
-      {/* Skills Section */}
       <section className="skills-section py-20 relative z-10">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-16">Our Expertise</h2>
@@ -195,7 +188,6 @@ const AboutPage: FC = () => {
         </div>
       </section>
 
-      {/* Timeline Section */}
       <section className="timeline-section py-20 relative z-10">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-16">Our Journey</h2>

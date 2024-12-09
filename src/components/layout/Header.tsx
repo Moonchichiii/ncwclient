@@ -8,10 +8,10 @@ interface HeaderProps {
 }
 
 const navigationItems = [
-  { path: '/home', label: 'Home' },
-  { path: '/portfolio', label: 'Portfolio' },
-  { path: '/about', label: 'About' },
-  { path: '/contact', label: 'Contact' },
+  { href: '#intro', label: 'Home' },
+  { href: '#panel-1', label: 'Portfolio' },
+  { href: '#panel-3', label: 'About' },
+  { href: '#contact', label: 'Contact' }
 ];
 
 const SocialLinks: FC = () => {
@@ -166,7 +166,8 @@ const Header: FC<HeaderProps> = ({ className }) => {
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md border-b border-white/20 shadow-lg ${className}`}
+      className={`fixed top-0 left-0 w-full bg-[#0F172A] bg-opacity-95 backdrop-blur-none border-b border-white/10 shadow-lg z-[999] ${className}`}
+
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -192,24 +193,20 @@ const Header: FC<HeaderProps> = ({ className }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`text-sm font-medium transition-all duration-300 hover:text-white 
-                  ${location.pathname === item.path 
-                    ? 'text-white font-bold scale-105' 
-                    : 'text-gray-300 hover:scale-105'
-                  }`}
-                aria-current={location.pathname === item.path ? 'page' : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pl-4 border-l border-white/10">
-              <SocialLinks />
-            </div>
-          </nav>
+          {navigationItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium transition-all duration-300 hover:text-white 
+                hover:scale-105"
+            >
+              {item.label}
+            </a>
+          ))}
+          <div className="pl-4 border-l border-white/10">
+            <SocialLinks />
+          </div>
+        </nav>
 
           {/* Mobile Menu Button */}
           <button
@@ -234,37 +231,33 @@ const Header: FC<HeaderProps> = ({ className }) => {
           className="md:hidden fixed inset-x-0 top-20"
         >
           <nav
-            className="mx-4 rounded-xl bg-black/90 backdrop-blur-md shadow-lg 
-              border border-white/10 transform-gpu"
+          className="mx-4 rounded-xl bg-surface-darker backdrop-blur-md shadow-lg 
+          border border-white/10 transform-gpu"          
             aria-label="Mobile navigation"
           >
-            <div className="px-4 py-6 space-y-4">
-              {navigationItems.map((item, index) => (
-                <div
-                  key={item.path}
-                  ref={(el) => (menuItemsRef.current[index] = el)}
-                >
-                  <Link
-                    to={item.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block py-2 text-base font-medium transition-all duration-300 
-                      hover:text-white hover:translate-x-1 
-                      ${location.pathname === item.path 
-                        ? 'text-white font-bold' 
-                        : 'text-gray-300'
-                      }`}
-                  >
-                    {item.label}
-                  </Link>
-                </div>
-              ))}
-              <div
-                className="pt-4 border-t border-white/10"
-                ref={(el) => (menuItemsRef.current[navigationItems.length] = el)}
+          <div className="px-4 py-6 space-y-4">
+          {navigationItems.map((item, index) => (
+            <div
+              key={item.href}
+              ref={(el) => (menuItemsRef.current[index] = el)}
+            >
+              <a
+                href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block py-2 text-base font-medium transition-all duration-300 
+                  hover:text-white hover:translate-x-1 text-gray-300"
               >
-                <SocialLinks />
-              </div>
+                {item.label}
+              </a>
             </div>
+          ))}
+          <div
+            className="pt-4 border-t border-white/10"
+            ref={(el) => (menuItemsRef.current[navigationItems.length] = el)}
+          >
+            <SocialLinks />
+          </div>
+        </div>
           </nav>
         </div>
       )}

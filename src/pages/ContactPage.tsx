@@ -60,7 +60,6 @@ const ContactPage: FC = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero section animation
       gsap.from('.contact-title span', {
         y: 100,
         opacity: 0,
@@ -77,7 +76,6 @@ const ContactPage: FC = () => {
         ease: 'power3.out'
       });
 
-      // Form and sidebar animations
       gsap.from('.contact-form', {
         x: -50,
         opacity: 0,
@@ -124,7 +122,6 @@ const ContactPage: FC = () => {
 
   return (
     <div ref={containerRef} className="min-h-screen w-full bg-surface-darker text-white">
-      {/* Background Pattern */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-tekhelet-dark/20 to-transparent opacity-50" />
         <div className="absolute inset-0 opacity-5"
@@ -136,10 +133,8 @@ const ContactPage: FC = () => {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20">
-        {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="contact-title text-5xl md:text-6xl lg:text-7xl font-mono mb-6">
-            {/* Split text for animation */}
             {'Let\'s Create'.split('').map((letter, index) => (
               <span key={index} className="inline-block">{letter}</span>
             ))}
@@ -150,7 +145,6 @@ const ContactPage: FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Form */}
           <form
             ref={formRef}
             onSubmit={handleSubmit(onSubmit)}
@@ -249,9 +243,7 @@ const ContactPage: FC = () => {
             </button>
           </form>
 
-          {/* Contact Info Sidebar */}
           <div className="contact-sidebar space-y-8">
-            {/* Contact Information */}
             <div className="backdrop-blur-sm p-8 rounded-2xl border border-white/10">
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               <div className="space-y-6">
@@ -278,7 +270,6 @@ const ContactPage: FC = () => {
               </div>
             </div>
 
-            {/* Social Links */}
             <div className="backdrop-blur-sm p-8 rounded-2xl border border-white/10">
               <h3 className="text-2xl font-bold mb-6">Follow Us</h3>
               <div className="flex gap-4">

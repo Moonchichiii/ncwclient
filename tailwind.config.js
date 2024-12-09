@@ -1,4 +1,3 @@
-// tailwind.config.js
 import type { Config } from 'tailwindcss';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
@@ -44,8 +43,12 @@ const config: Config = {
           base: '#2D1B69',
           light: '#432371',
           dark: '#1A103F',
+          finn: {
+            1: '#2D1B69',
+            2: '#3D2B79',
+            3: '#4D3B89'
+          }
         },
-        
         status: {
           success: '#4CAF50',
           error: '#EF4444',
@@ -53,8 +56,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['Space Grotesk', 'monospace'],
+        sans: ['Roboto', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'],
+        body: ['Roboto', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-dark': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',

@@ -34,7 +34,6 @@ const PortfolioPage: FC = () => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Hero section animation
       const tl = gsap.timeline();
       tl.from('.portfolio-title', {
         opacity: 0,
@@ -54,7 +53,6 @@ const PortfolioPage: FC = () => {
         duration: 0.4,
       }, '-=0.2');
 
-      // Project cards animation
       ScrollTrigger.batch('.project-card', {
         start: 'top bottom-=100px',
         onEnter: (batch) => {
@@ -74,7 +72,6 @@ const PortfolioPage: FC = () => {
 
   return (
     <div ref={containerRef} className="relative min-h-screen w-full bg-surface-darker text-white">
-      {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-tekhelet-dark/50 to-transparent opacity-30" />
         <div className="absolute inset-0 opacity-5"
@@ -85,9 +82,7 @@ const PortfolioPage: FC = () => {
         />
       </div>
 
-      {/* Content Container */}
       <div className="relative z-10 px-4 py-20">
-        {/* Hero Section */}
         <div className="max-w-6xl mx-auto text-center mb-16">
           <h1 className="portfolio-title text-5xl md:text-6xl lg:text-7xl font-mono leading-tight mb-6">
             Our Portfolio
@@ -96,7 +91,6 @@ const PortfolioPage: FC = () => {
             Explore our latest projects and digital solutions
           </p>
 
-          {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-4 mb-16">
             {categories.map((category) => (
               <button
@@ -116,7 +110,6 @@ const PortfolioPage: FC = () => {
           </div>
         </div>
 
-        {/* Projects Grid */}
         <div ref={projectsRef} className="max-w-7xl mx-auto">
           {loading ? (
             <div className="flex items-center justify-center h-64">
@@ -135,7 +128,6 @@ const PortfolioPage: FC = () => {
                     border border-white/10 rounded-xl overflow-hidden transition-all duration-300
                     hover:border-white/20 hover:transform hover:scale-[1.02]"
                 >
-                  {/* Project Image */}
                   <div className="aspect-video overflow-hidden">
                     <img
                       src={project.image}
@@ -145,7 +137,6 @@ const PortfolioPage: FC = () => {
                     />
                   </div>
 
-                  {/* Project Info */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent 
                     p-6 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 
                     transition-transform duration-300"
@@ -155,7 +146,6 @@ const PortfolioPage: FC = () => {
                       {project.description}
                     </p>
                     
-                    {/* Action Links */}
                     <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 
                       transition-opacity duration-300"
                     >

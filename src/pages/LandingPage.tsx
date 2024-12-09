@@ -15,7 +15,6 @@ const LandingPage: FC = () => {
   const nordicText = 'nordic'.split('');
   const codeText = '((code) => works)'.split('');
 
-  // Time updates
   useEffect(() => {
     const updateTimes = () => {
       const now = new Date();
@@ -32,20 +31,17 @@ const LandingPage: FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // GSAP animations
   useEffect(() => {
     if (!containerRef.current) return;
 
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' }});
 
-    // Initial states
     gsap.set('.letter', { y: 50, opacity: 0 });
     gsap.set('.tagline, .scroll-indicator', { y: 30, opacity: 0 });
     gsap.set('.tech-stack', { opacity: 0, y: 20 });
     gsap.set(sideLinksRef.current, { opacity: 0, x: -20 });
     gsap.set('.time-display', { opacity: 0, y: -20 });
 
-    // Animation sequence
     tl.to('.time-display', { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 0)
       .to('.letter', { 
         y: 0, 
@@ -90,7 +86,6 @@ const LandingPage: FC = () => {
       ref={containerRef} 
       className="relative min-h-screen w-full flex flex-col items-center justify-center bg-surface-darker overflow-hidden"
     >
-      {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-tekhelet opacity-10" />
         <div 
@@ -102,7 +97,6 @@ const LandingPage: FC = () => {
         />
       </div>
 
-      {/* Time Display and Theme Toggle */}
       <div className="absolute top-8 w-full px-6 flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-xs text-white/70">
@@ -130,7 +124,6 @@ const LandingPage: FC = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div ref={textRef} className="text-center w-full max-w-6xl px-4 mx-auto mb-12">
         <h1 className="font-mono leading-none tracking-tighter mb-6">
           <div className="overflow-hidden">
@@ -169,7 +162,6 @@ const LandingPage: FC = () => {
 
               </div>
 
-      {/* Side Links */}
       <div
         ref={sideLinksRef}
         className="fixed bottom-12 left-6 flex flex-col gap-6 text-xs"
@@ -193,7 +185,6 @@ const LandingPage: FC = () => {
         ))}
       </div>
 
-      {/* Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
         className="absolute bottom-8 w-full flex flex-col items-center gap-3"
