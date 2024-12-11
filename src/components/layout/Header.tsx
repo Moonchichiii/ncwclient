@@ -9,11 +9,18 @@ interface HeaderProps {
 }
 
 const navigationItems = [
-  { href: '#intro', label: 'Home' },
+  { href: '#home', label: 'Home' }, 
   { href: '#portfolio', label: 'Portfolio' },
   { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' }
 ];
+
+const scrollToSection = (href: string) => {
+  const targetElement = document.querySelector(href);
+  if (targetElement) {
+    targetElement.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 const SocialLinks: FC = () => {
   const socialLinksRef = useRef<HTMLDivElement>(null);
@@ -107,6 +114,8 @@ const Header: FC<HeaderProps> = ({ className }) => {
     return () => ctx.revert();
   }, []);
 
+
+
   const handleMenuButtonClick = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
     gsap.to(menuButtonRef.current, {
@@ -124,6 +133,7 @@ const Header: FC<HeaderProps> = ({ className }) => {
   };
 
   return (
+    
     <header
       ref={headerRef}
       className={`fixed top-0 left-0 w-full 
@@ -134,13 +144,19 @@ const Header: FC<HeaderProps> = ({ className }) => {
         z-[999] ${className}`}
       role="banner"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link 
-            to="/" 
-            className="flex items-center group relative" 
-            aria-label="Nordic Code Works - Home"
-          >
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-between h-20">
+    
+      <Link
+        to="#home"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToSection('#home');
+        }}
+        className="flex items-center group relative"
+        aria-label="Nordic Code Works - Home"
+      >
+      
             <div ref={logoRef} className="relative overflow-hidden font-mono tracking-tighter flex">
               <span className="text-2xl font-bold">
                 <span style={{ color: '#3BB4C5' }}>nordic</span>

@@ -13,8 +13,8 @@ const config: Config = {
     extend: {
       zIndex: {
         'base': '0',
-        'header': '50',
-        'overlay': '100',
+        'header': '9999', 
+        
         'modal': '200',
       },
       colors: {
@@ -44,27 +44,27 @@ const config: Config = {
             bg: '#F7F9FC',
             text: '#1A1A1A',
             accent: '#432371',
-            hover: '#8655CA', // New hover color for light mode
+            hover: '#8655CA', 
           },
           dark: {
             bg: '#131B2E',
             text: '#FFFFFF',
             accent: '#8655CA',
-            hover: '#A881E6', // New lighter hover color for dark mode
+            hover: '#A881E6', 
           }
         },
         accent: {
           primary: '#432371',
           secondary: '#8655CA',
           tertiary: '#2628DD',
-          hover: '#A881E6', // New universal hover state
+          hover: '#A881E6', 
         },
         tekhelet: {
           base: '#2D1B69',
           light: '#432371',
           dark: '#1A103F',
-          hover: '#8655CA', // Default hover
-          'hover-dark': '#A881E6', // Dark mode hover
+          hover: '#8655CA', 
+          'hover-dark': '#A881E6', 
         },
         status: {
           success: '#4CAF50',
@@ -77,11 +77,7 @@ const config: Config = {
         heading: ['Poppins', 'sans-serif'], 
         body: ['Roboto', 'sans-serif'], 
       },
-      backgroundImage: {
-        'gradient-dark': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
-        'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
-        'gradient-tekhelet': 'linear-gradient(135deg, #2D1B69 0%, #714674 100%)',
-      },
+    
     },
   },
   plugins: [forms, typography],

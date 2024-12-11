@@ -36,17 +36,10 @@ const services = [
 
 const HomePage: FC = () => {
   return (
-    <div className="section">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
-          backgroundSize: '32px 32px'
-        }}
-      />
-
+    <div>
+          
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-[clamp(2.5rem,8vw,6rem)] font-mono leading-none mb-8">
             <div className="flex justify-center flex-wrap gap-x-2">
@@ -64,10 +57,10 @@ const HomePage: FC = () => {
             Crafting digital solutions with Nordic precision and elegant simplicity
           </p>
         </div>
-      </section>
+      </div>
 
       {/* Services Section */}
-      <section className="py-20 px-4">
+      <div className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
             Our Services
@@ -108,7 +101,7 @@ const HomePage: FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

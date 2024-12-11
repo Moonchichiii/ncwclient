@@ -98,20 +98,11 @@ const LandingPage: FC = () => {
 
   return (
     <div 
+    id="intro" 
       ref={containerRef} 
       className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden
-                 bg-white dark:bg-surface-darker transition-colors duration-300"
-    >
-                 
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-100 to-white 
-                       dark:from-surface-darker dark:to-transparent opacity-50 dark:opacity-10" />
-        <div className="absolute inset-0 opacity-5 dark:opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
-          backgroundSize: '32px 32px'
-        }} />
-      </div>
+                 bg-white dark:bg-surface-darker transition-colors duration-300">                 
+      
 
       {/* Top Bar */}
       <div className="absolute top-8 w-full px-6 flex justify-between items-start">

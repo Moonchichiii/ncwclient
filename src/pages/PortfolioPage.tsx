@@ -26,12 +26,7 @@ const PortfolioPage: FC = () => {
 
   return (
     <div className="relative min-h-screen w-full bg-white dark:bg-surface-darker text-gray-900 dark:text-white transition-colors duration-300">
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-100 to-transparent dark:from-tekhelet-dark/20 dark:to-transparent opacity-20" />
-        <div className="absolute inset-0 bg-pattern opacity-5 dark:opacity-10" />
-      </div>
-
+   
       <div className="relative z-10 px-4 py-20">
         {/* Header Section */}
         <div className="max-w-6xl mx-auto text-center mb-16">
