@@ -20,7 +20,6 @@ interface SocialLink {
 const Footer: React.FC = () => {
   const [selectedPolicy, setSelectedPolicy] = useState<{ title: string; content: string } | null>(null);
   const footerRef = useRef<HTMLElement>(null);
-  const socialLinksRef = useRef<HTMLDivElement>(null);
 
   const navigationItems: NavigationItem[] = [
     { path: '/home', label: 'Home' },
@@ -100,8 +99,7 @@ const Footer: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  const handlePolicyClick = (e: React.MouseEvent, key: string) => {
-    e.preventDefault();
+  const handlePolicyClick = (key: string) => {
     setSelectedPolicy(policies[key as keyof typeof policies]);
   };
 
@@ -109,42 +107,33 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <footer 
-        ref={footerRef} 
-        className="relative bg-gradient-to-br from-surface-darker to-tekhelet-dark py-16 overflow-hidden"
-      >
+      <footer ref={footerRef} className="relative w-full bg-white dark:bg-surface-darker py-16 overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-            backgroundSize: '32px 32px'
-          }}
-        />
+        <div className="absolute inset-0 bg-pattern opacity-5 dark:opacity-10" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center sm:text-left">
             {/* Company Description */}
             <div className="footer-section">
-              <h3 className="text-xl font-bold mb-4 text-white font-mono">Nordic Code Works</h3>
-              <p className="text-gray-300 text-sm leading-relaxed max-w-xs">
+              <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white font-mono">Nordic Code Works</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed max-w-xs">
                 Crafting elegant digital solutions with Scandinavian simplicity and precision.
               </p>
               <div className="flex items-center gap-2 mt-4 justify-center sm:justify-start">
-                <MapPin size={16} className="text-gray-400" />
-                <span className="text-gray-400 text-sm">Stockholm, Sweden</span>
+                <MapPin size={16} className="text-gray-500 dark:text-gray-400" />
+                <span className="text-gray-500 dark:text-gray-400 text-sm">Stockholm, Sweden</span>
               </div>
             </div>
 
             {/* Navigation Links */}
             <div className="footer-section">
-              <h3 className="text-lg font-bold mb-4 text-white">Quick Links</h3>
+              <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h3>
               <nav className="flex flex-col items-center sm:items-start space-y-3">
                 {navigationItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="animate-link text-gray-300 hover:text-white transition-all duration-300 
-                      hover:translate-x-1 text-sm"
+                    className="animate-link text-gray-600 dark:text-gray-300 hover:text-tekhelet-base dark:hover:text-white transition-all duration-300 hover:translate-x-1 text-sm"
                   >
                     {item.label}
                   </Link>
@@ -154,14 +143,13 @@ const Footer: React.FC = () => {
 
             {/* Legal Links */}
             <div className="footer-section">
-              <h3 className="text-lg font-bold mb-4 text-white">Legal</h3>
+              <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Legal</h3>
               <nav className="flex flex-col items-center sm:items-start space-y-3">
                 {legalLinks.map((link) => (
                   <button
                     key={link.path}
-                    onClick={(e) => handlePolicyClick(e, link.key)}
-                    className="animate-link text-gray-300 hover:text-white transition-all duration-300 
-                      hover:translate-x-1 text-sm text-left cursor-pointer"
+                    onClick={() => handlePolicyClick(link.key)}
+                    className="animate-link text-gray-600 dark:text-gray-300 hover:text-tekhelet-base dark:hover:text-white transition-all duration-300 hover:translate-x-1 text-sm text-left cursor-pointer"
                   >
                     {link.label}
                   </button>
@@ -171,12 +159,11 @@ const Footer: React.FC = () => {
 
             {/* Contact and Social Links */}
             <div className="footer-section">
-              <h3 className="text-lg font-bold mb-4 text-white">Connect</h3>
+              <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Connect</h3>
               <div className="space-y-4">
                 <a
                   href="mailto:contact@nordiccodeworks.com"
-                  className="group flex items-center gap-2 justify-center sm:justify-start text-gray-300 
-                    hover:text-white transition-all duration-300"
+                  className="group flex items-center gap-2 justify-center sm:justify-start text-gray-600 dark:text-gray-300 hover:text-tekhelet-base dark:hover:text-white transition-all duration-300"
                 >
                   <Mail size={16} className="group-hover:scale-110 transition-transform duration-300" />
                   <span className="text-sm">contact@nordiccodeworks.com</span>
@@ -188,11 +175,10 @@ const Footer: React.FC = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="social-link p-2 rounded-full bg-white/5 hover:bg-white/10 
-                        transition-all duration-300"
+                      className="social-link p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-all duration-300"
                       aria-label={social.ariaLabel}
                     >
-                      <social.icon size={18} className="text-white" />
+                      <social.icon size={18} className="text-gray-600 dark:text-white" />
                     </a>
                   ))}
                 </div>
@@ -201,9 +187,9 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Copyright and Legal Disclaimer */}
-          <div className="footer-divider w-full h-px bg-white/10 mt-12 mb-8 origin-left" />
-          <div className="footer-section text-center">
-            <p className="text-gray-400 text-sm">
+          <div className="footer-divider w-full h-px bg-gray-200 dark:bg-white/10 mt-12 mb-8 origin-left" />
+          <div className="footer-section text-center w-full">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               © {currentYear} Nordic Code Works. All rights reserved.
             </p>
           </div>
@@ -213,8 +199,8 @@ const Footer: React.FC = () => {
       <PolicyModal
         isOpen={!!selectedPolicy}
         onClose={() => setSelectedPolicy(null)}
-        title={selectedPolicy?.title || ''}
-        content={selectedPolicy?.content || ''}
+        title={selectedPolicy?.title ?? ''}
+        content={selectedPolicy?.content ?? ''}
       />
     </>
   );

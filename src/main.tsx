@@ -10,11 +10,19 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
-      cacheTime: 10 * 60 * 1000,
+      gcTime: 10 * 60 * 1000, 
       retry: 1,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      suspense: true,
+      refetchOnReconnect: 'always',
+      networkMode: 'offlineFirst'
     },
-  },
+    mutations: {
+      retry: 1,
+      networkMode: 'offlineFirst'
+    }
+  }
 });
 
 const rootElement = document.getElementById('root');

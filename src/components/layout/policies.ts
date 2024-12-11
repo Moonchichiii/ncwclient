@@ -1,5 +1,3 @@
-// src/constants/policies.ts
-
 export const policies = {
     terms: {
       title: 'Terms of Service',

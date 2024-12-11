@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { projectsService, Project } from '../../api/services/projects';
+import { projectsService } from '../../api/services/projects';
 
 export const useProjects = (params?: { page?: number; featured?: boolean }) => {
   return useQuery({

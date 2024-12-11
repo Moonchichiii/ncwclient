@@ -1,4 +1,6 @@
-// eslint.config.js
+import { fileURLToPath } from 'url';
+import path from 'path';
+
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
@@ -6,49 +8,43 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 export default tseslint.config({
-  ignores: ['dist'], // Ignore build folder
+  ignores: ['dist', 'tailwind.config.js'], // Ignore non-TS files
   extends: [
     js.configs.recommended,
-    ...tseslint.configs.recommended, // Base TypeScript rules
-    ...tseslint.configs.recommendedTypeChecked, // Type-aware rules
-    ...tseslint.configs.stylisticTypeChecked, // Optional stylistic rules
+    ...tseslint.configs.recommended,
+    ...tseslint.configs.recommendedTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
   ],
-  files: ['**/*.{ts,tsx}'], // Lint only TypeScript files
+  files: ['src/**/*.ts', 'src/**/*.tsx'], 
   languageOptions: {
-    ecmaVersion: 2020, // Set ECMAScript version
-    globals: globals.browser, // Browser globals
+    ecmaVersion: 2020,
+    globals: globals.browser,
     parserOptions: {
-      project: ['./tsconfig.json'], // Path to your tsconfig
-      tsconfigRootDir: import.meta.dirname, // Resolve tsconfig directory
+      project: [
+        path.resolve(__dirname, './tsconfig.app.json'),
+        path.resolve(__dirname, './tsconfig.node.json')
+      ],
+      tsconfigRootDir: __dirname,
     },
   },
   plugins: {
-    react, // React rules
-    'react-hooks': reactHooks, 
-    'react-refresh': reactRefresh, 
+    react,
+    'react-hooks': reactHooks,
+    'react-refresh': reactRefresh,
   },
   settings: {
-    react: { version: 'detect' }, 
+    react: { version: 'detect' },
   },
   rules: {    
     ...react.configs.recommended.rules,
     ...react.configs['jsx-runtime'].rules,
-
-    // React Hooks rules
     ...reactHooks.configs.recommended.rules,
-
-    // React Refresh rule
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-
-    // Custom TypeScript rules
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
-
-    // Example stylistic rules
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/naming-convention': [
       'error',

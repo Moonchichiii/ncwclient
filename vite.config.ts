@@ -15,10 +15,20 @@ export default defineConfig({
     ]
   },
   build: {
+    target: 'esnext',
+    minify: 'terser',
     sourcemap: true,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
+          'vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
           'gsap-core': ['gsap'],
           'gsap-plugins': [
             'gsap/ScrollTrigger',
@@ -27,14 +37,16 @@ export default defineConfig({
             'gsap/CustomEase',
             'gsap/MotionPathPlugin'
           ],
+          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-slot'],
+          'forms': ['react-hook-form', '@hookform/resolvers/zod']
         }
       }
     }
   },
   optimizeDeps: {
     include: [
-      'react', 
-      'react-dom', 
+      'react',
+      'react-dom',
       'react-router-dom',
       'gsap',
       'gsap/ScrollTrigger',
@@ -52,13 +64,11 @@ export default defineConfig({
   server: {
     host: true,
     proxy: {
-      // Block GSAP registration attempts
       '^https://gsap.com/.*': {
         target: 'about:blank',
         changeOrigin: true,
         secure: false
       },
-      // Block any URLs containing 'gsap' or 'greensock'
       '.*(?:gsap|greensock).*': {
         target: 'about:blank',
         changeOrigin: true,

@@ -1,8 +1,10 @@
-import { FC, lazy, Suspense } from 'react';
+// App.tsx
+import { FC, lazy, Suspense, useRef } from 'react';
 import { useGSAPSetup } from './hooks/gsap-init';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import CookieConsent from './components/common/CookieConsent';
 
+// Lazy load components
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const PortfolioPage = lazy(() => import('./pages/PortfolioPage'));
@@ -12,86 +14,67 @@ const Header = lazy(() => import('./components/layout/Header'));
 const Footer = lazy(() => import('./components/layout/Footer'));
 
 const App: FC = () => {
+  const headerRef = useRef<HTMLElement>(null);
+  useGSAPSetup(headerRef);
+
+
   
-  useGSAPSetup();
-
   return (
-  <div id="page" className="bg-surface-darker">
-    <div className="fixed inset-0 w-full h-full pointer-events-none bg-pattern" />
-   
-    <Suspense fallback={<LoadingSpinner />}>
-    <header
-      id="masthead"
-      className="site-header opacity-0 pointer-events-none"
-    >
-      <nav className="anchor-nav p-4 bg-black/80 backdrop-blur-sm flex flex-wrap gap-2 md:gap-4">
-      <Header />
-      </nav>
-    </header>
-
-    <main id="content" className="site-content relative" role="main">
-      <section id="intro" className="full-screen">
-      <LandingPage />
-      </section>
-
-      <section id="home" className="full-screen">
-      <HomePage />
-      </section>
-
-      <section id="panels" className="relative h-screen overflow-hidden">
-      <div id="panels-container" className="absolute top-0 left-0 flex">
-        <article id="panel-1" className="panel">
-        <div className="portfolio-section">
-          <PortfolioPage />
-        </div>
-        </article>
-       
-        <article id="panel-2" className="panel">
-        <div className="portfolio-section">
-          <div className="container mx-auto px-4 h-full flex items-center">
-          <h2 className="text-4xl font-bold">Project 2</h2>
-          </div>
-        </div>
-        </article>
-
-        <article id="panel-3" className="panel">
-        <div className="about-section">
-          <AboutPage />
-        </div>
-        </article>
-
-        <article id="panel-4" className="panel">
-        <div className="about-section">
-          <div className="container mx-auto px-4 h-full flex items-center">
-          <h2 className="text-4xl font-bold">More About</h2>
-          </div>
-        </div>
-        </article>
-
-        <article id="panel-5" className="panel">
-        <div className="about-section">
-          <div className="container mx-auto px-4 h-full flex items-center">
-          <h2 className="text-4xl font-bold">Experience</h2>
-          </div>
-        </div>
-        </article>
+    <div id="page" className="relative min-h-screen bg-theme-light-bg dark:bg-theme-dark-bg transition-colors duration-300">
+      {/* Background Pattern */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none">
+        <div className="absolute inset-0 bg-pattern opacity-5 dark:opacity-10" />
       </div>
-      </section>
 
-      <section id="contact" className="full-screen">
-      <ContactPage />
-      </section>
-    </main>
+      <Suspense fallback={<LoadingSpinner />}>
+        {/* Header */}
+        <header ref={headerRef} id="masthead" className="site-header">
+          <nav className="p-4 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-black/10 dark:border-white/10">
+            <Header />
+          </nav>
+        </header>
 
-    <footer id="footer" className="relative z-[100] w-full bg-black text-white p-8">
-      <div className="container mx-auto">
-      <Footer />
-      </div>
-    </footer>
+        <div id="smooth-wrapper">
+          <div id="smooth-content">
+            <main id="content" className="relative bg-theme-light-bg dark:bg-theme-dark-bg text-theme-light-text dark:text-theme-dark-text transition-colors duration-300" role="main">
+              {/* Landing Section */}
+              <section id="intro" className="section">
+                <LandingPage />
+              </section>
 
-    <CookieConsent />
-    </Suspense>
-  </div>
+              {/* Home Section */}
+              <section id="home" className="section">
+                <HomePage />
+              </section>
+
+              {/* Portfolio Section */}
+              <section id="portfolio" className="section">
+                <PortfolioPage />
+              </section>
+
+              {/* About Section */}
+              <section id="about" className="section">
+                <AboutPage />
+              </section>
+
+              {/* Contact Section */}
+              <section id="contact" className="section">
+                <ContactPage />
+              </section>
+            </main>
+
+            {/* Footer */}
+            <footer className="relative z-10 bg-theme-light-bg dark:bg-theme-dark-bg text-theme-light-text dark:text-theme-dark-text border-t border-black/10 dark:border-white/10 transition-colors duration-300">
+              <div className="container mx-auto p-8">
+                <Footer />
+              </div>
+            </footer>
+          </div>
+        </div>
+
+        <CookieConsent />
+      </Suspense>
+    </div>
   );
 };
 

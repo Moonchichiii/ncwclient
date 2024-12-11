@@ -1,40 +1,52 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 const LoadingSpinner = () => {
-  const outerSpinnerRef = useRef(null);
-  const innerSpinnerRef = useRef(null);
-  const centerDotRef = useRef(null);
+  const outerSpinnerRef = useRef<HTMLDivElement>(null);
+  const innerSpinnerRef = useRef<HTMLDivElement>(null);
+  const centerDotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const outerSpinner = outerSpinnerRef.current;
+    const innerSpinner = innerSpinnerRef.current;
+    const centerDot = centerDotRef.current;
+
     // Outer spinner rotation
-    gsap.to(outerSpinnerRef.current, {
-      rotation: 360,
-      duration: 2,
-      repeat: -1,
-      ease: "none",
-    });
+    if (outerSpinner) {
+      gsap.to(outerSpinner, {
+        rotation: 360,
+        duration: 2,
+        repeat: -1,
+        ease: "none",
+      });
+    }
 
     // Inner spinner rotation (counter-clockwise)
-    gsap.to(innerSpinnerRef.current, {
-      rotation: -360,
-      duration: 1.5,
-      repeat: -1,
-      ease: "none",
-    });
+    if (innerSpinner) {
+      gsap.to(innerSpinner, {
+        rotation: -360,
+        duration: 1.5,
+        repeat: -1,
+        ease: "none",
+      });
+    }
 
     // Center dot pulsing animation
-    gsap.to(centerDotRef.current, {
-      opacity: 1,
-      duration: 0.75,
-      repeat: -1,
-      yoyo: true,
-      ease: "none",
-    });
+    if (centerDot) {
+      gsap.to(centerDot, {
+        opacity: 1,
+        duration: 0.75,
+        repeat: -1,
+        yoyo: true,
+        ease: "none",
+      });
+    }
 
     // Cleanup
     return () => {
-      gsap.killTweensOf([outerSpinnerRef.current, innerSpinnerRef.current, centerDotRef.current]);
+      if (outerSpinner) gsap.killTweensOf(outerSpinner);
+      if (innerSpinner) gsap.killTweensOf(innerSpinner);
+      if (centerDot) gsap.killTweensOf(centerDot);
     };
   }, []);
 

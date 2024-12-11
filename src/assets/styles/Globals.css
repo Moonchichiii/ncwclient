@@ -1,4 +1,3 @@
-/* Import Tailwind Utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +6,7 @@
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 400; 
+  font-weight: 400;
   font-display: swap;
   src: url('/src/assets/fonts/poppins-regular.woff2') format('woff2');
 }
@@ -15,7 +14,7 @@
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 700; 
+  font-weight: 700;
   font-display: swap;
   src: url('/src/assets/fonts/poppins-bold.woff2') format('woff2');
 }
@@ -23,20 +22,10 @@
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 400; 
+  font-weight: 400;
   font-display: swap;
   src: url('/src/assets/fonts/roboto-regular.woff2') format('woff2');
 }
-
-body {
-  font-family: 'Roboto', sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
-}
-
-
 
 /* Base Styles */
 @layer base {
@@ -47,12 +36,22 @@ h1, h2, h3, h4, h5, h6 {
 
   html,
   body {
-    @apply m-0 min-h-full font-light overflow-x-hidden bg-surface-darker text-white;
+    @apply m-0 min-h-full font-light overflow-x-hidden transition-colors duration-300;
     font-family: 'Roboto', sans-serif;
   }
- 
+
+  body {
+    @apply bg-white dark:bg-surface-darker text-gray-900 dark:text-white transition-colors duration-300;
+  }
+
+  /* Theme-aware text */
   h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-900 dark:text-white transition-colors duration-300;
     font-family: 'Poppins', sans-serif;
+  }
+
+  p {
+    @apply text-gray-700 dark:text-gray-300 transition-colors duration-300;
   }
 }
 
@@ -60,179 +59,169 @@ h1, h2, h3, h4, h5, h6 {
 @layer components {
   /* Layout Structure */
   #page {
-    @apply relative min-h-screen bg-surface-darker overflow-x-hidden;
+    @apply relative min-h-screen bg-white dark:bg-surface-darker transition-colors duration-300;
   }
 
-  #smooth-wrapper {
-    @apply overflow-hidden;
+  /* Main Layout Components */
+  .section {
+    @apply relative min-h-screen w-full flex flex-col items-center justify-center 
+           bg-white dark:bg-surface-darker transition-colors duration-300;
   }
 
-  #smooth-content {
-    @apply min-h-screen;
+   /* Header & Navigation */
+   .site-header {
+    @apply fixed top-0 left-0 right-0 z-header
+           bg-white/80 dark:bg-black/80 backdrop-blur-sm
+           border-b border-gray-200/80 dark:border-white/10
+           
+           
+  }
+  .nav-link {
+    @apply relative text-gray-700 dark:text-white/80
+           hover:text-gray-900 dark:hover:text-white 
+           transition-all duration-300;
   }
 
-  /* Header */
-  .site-header {
-    @apply fixed top-0 left-0 right-0 z-header mix-blend-difference;
-    transition: opacity 0.5s ease, pointer-events 0.5s ease;
+  .nav-link.active {
+    @apply text-tekhelet-base dark:text-white;
   }
-
-  /* Navigation */
-  .anchor-nav {
-    @apply fixed top-0 left-0 right-0 z-50 mix-blend-difference;
-  }
-
-  .anchor-nav a {
-    @apply relative text-white hover:text-white/80 transition-colors;
-  }
-
-  .anchor-nav a.active::after {
+  
+  .nav-link.active::after {
     content: '';
-    @apply absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform origin-bottom-right;
+    @apply absolute -bottom-1 left-0 w-full h-0.5 
+           bg-tekhelet-base dark:bg-white 
+           transform scale-x-100 transition-transform duration-300;
+  }
+  
+
+  /* Cards and UI Elements */
+  .card {
+    @apply bg-white/60 dark:bg-gray-900/40
+           backdrop-blur-lg
+           border border-gray-200/50 dark:border-white/10
+           hover:border-gray-300 dark:hover:border-white/20
+           shadow-lg dark:shadow-none
+           transition-all duration-300;
   }
 
-  .anchor-nav a.active:hover::after {
-    @apply scale-x-100 origin-bottom-left;
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-tekhelet-base dark:bg-tekhelet-light 
+           text-white
+           hover:bg-tekhelet-dark dark:hover:bg-tekhelet-base
+           transition-all duration-300;
   }
 
-  /* Main Content */
-  .site-content {
-    @apply relative z-base min-h-screen;
+  .btn-secondary {
+    @apply bg-white dark:bg-gray-800
+           text-gray-900 dark:text-white 
+           border border-gray-200 dark:border-gray-700
+           hover:bg-gray-50 dark:hover:bg-gray-700
+           transition-all duration-300;
   }
 
-  /* Section Layouts */
-  .full-screen {
-    @apply flex flex-col items-center justify-center min-h-screen w-full relative overflow-hidden bg-surface-darker;
-  }
-
-  .section-content {
-    @apply relative z-10 container mx-auto px-4;
-  }
-
-
-  /* Panels System */
-  #panels {
-    @apply relative h-screen w-full overflow-hidden bg-surface-darker;
-    contain: paint;
-  }
-
-  #panels-container {
-    @apply flex flex-row h-screen;
-    width: 500%;
-    transform: translate3d(0, 0, 0);
-    contain: paint;
-  }
-
-  .panel {
-    @apply w-screen h-screen flex-shrink-0 relative overflow-hidden bg-surface-darker;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-    contain: paint;
-  }
-
-  /* Section Heights */
-  .portfolio-section,
-  .about-section {
-    @apply h-screen w-full relative bg-surface-darker;
-  }
-
-  .section-end {
-    @apply absolute bottom-0 left-0 w-full h-1 pointer-events-none opacity-0;
-  }
-
-  .panel-end {
-    @apply absolute bottom-0 right-0 w-1 h-full pointer-events-none opacity-0;
-  }
-
-  #intro > div,
-  #home > div,
-  #contact > div {
-    @apply min-h-screen;
-  }
-
-  /* Background Elements */
-  .bg-pattern {
-    @apply fixed inset-0 w-full h-full pointer-events-none opacity-5;
-    background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
-    background-size: 32px 32px;
-  }
-
-  .bg-gradient-overlay {
-    @apply absolute inset-0 pointer-events-none z-0;
-    background: linear-gradient(
-      to bottom,
-      rgba(45, 27, 105, 0.2) 0%,
-      transparent 100%
-    );
-  }
-
-  /* Footer */
-  #footer {
-    @apply relative z-[100] bg-surface-darker;
-    contain: paint;
+  /* Form Elements */
+  .input {
+    @apply bg-white/80 dark:bg-black/20
+           border border-gray-200 dark:border-white/10
+           text-gray-900 dark:text-white
+           placeholder:text-gray-500 dark:placeholder:text-gray-400
+           focus:border-tekhelet-base dark:focus:border-tekhelet-light
+           focus:ring-1 focus:ring-tekhelet-base dark:focus:ring-tekhelet-light
+           transition-all duration-200;
   }
 }
 
 /* Utility Classes */
 @layer utilities {
-  .animate-link {
-    @apply transition-colors duration-200;
-  }
-
   .gpu {
     @apply transform-gpu will-change-transform;
     backface-visibility: hidden;
     perspective: 1000px;
   }
 
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  /* Background Patterns */
+  .bg-pattern {
+    @apply opacity-5 dark:opacity-10;
+    background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0);
+    background-size: 32px 32px;
   }
 
-  .blend-difference {
-    @apply mix-blend-difference;
+  /* Theme-aware glassmorphism */
+  .glass {
+    @apply bg-white/60 dark:bg-gray-900/40
+           backdrop-blur-lg
+           border border-gray-200/50 dark:border-white/10;
   }
 
-  .blend-overlay {
-    @apply mix-blend-overlay;
+  .hover-accent {
+    @apply hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark transition-colors duration-300;
   }
 
-  .transition-smooth {
-    @apply transition-all duration-300 ease-out;
+  /* Navigation links */
+  .nav-link-hover {
+    @apply text-gray-700 dark:text-gray-200
+           hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark
+           transition-all duration-300 hover:scale-105;
   }
-}
 
-/* Theme System */
-:root {
-  color-scheme: dark light;
-}
+  /* Social links */
+  .social-link-hover {
+    @apply text-gray-600 dark:text-gray-300
+           hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark
+           group-hover:scale-110 transition-all duration-300;
+  }
 
-:root[class~="dark"] {
-  color-scheme: dark;
-}
+  /* Button hovers */
+  .btn-hover {
+    @apply hover:bg-tekhelet-hover dark:hover:bg-tekhelet-hover-dark
+           transition-all duration-300;
+  }
 
-:root[class~="light"] {
-  color-scheme: light;
-}
+  /* Text hover effects */
+  .hover-text-primary {
+    @apply hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark 
+           transition-colors duration-300;
+  }
 
-.dark {
-  @apply bg-surface-darker text-white;
-}
+  .hover-text-accent {
+    @apply text-gray-600 dark:text-gray-300
+           hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark 
+           transition-colors duration-300;
+  }
 
-.light {
-  @apply bg-surface-lighter text-mono-900;
-}
+  /* Side link effects */
+  .side-link-hover {
+    @apply text-gray-500 dark:text-white/60
+           hover:text-tekhelet-hover dark:hover:text-tekhelet-hover-dark
+           transition-colors duration-300;
+  }
 
-/* GSAP Markers */
-.gsap-marker-scroller-start,
-.gsap-marker-scroller-end {
-  @apply fixed z-[1000] text-white text-sm leading-none;
-}
+  /* Button effects */
+  .btn-hover-primary {
+    @apply bg-tekhelet-base dark:bg-tekhelet-light
+           hover:bg-tekhelet-hover dark:hover:bg-tekhelet-hover-dark
+           text-white transition-all duration-300;
+  }
 
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-  .anchor-nav {
-    @apply backdrop-blur-md bg-black/80;
+  .btn-hover-secondary {
+    @apply bg-white/10 dark:bg-white/5
+           hover:bg-tekhelet-hover/20 dark:hover:bg-tekhelet-hover-dark/20
+           transition-all duration-300;
+  }
+
+  /* Gradient text effects */
+  .text-gradient {
+    @apply bg-gradient-to-r from-tekhelet-base to-tekhelet-light 
+           dark:from-tekhelet-hover dark:to-tekhelet-hover-dark
+           bg-clip-text text-transparent;
+  }
+
+  /* Border hover effects */
+  .border-hover {
+    @apply border-gray-200/50 dark:border-white/10
+           hover:border-tekhelet-hover dark:hover:border-tekhelet-hover-dark
+           transition-colors duration-300;
   }
 }
 
@@ -245,3 +234,4 @@ h1, h2, h3, h4, h5, h6 {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+

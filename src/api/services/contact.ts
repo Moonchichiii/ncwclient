@@ -7,9 +7,14 @@ export interface ContactFormData {
   message: string;
 }
 
+export interface ContactResponse {
+  success: boolean;
+  message: string;  
+}
+
 export const contactService = {
-  submit: async (data: ContactFormData) => {
-    const response = await api.post(ENDPOINTS.CONTACT, data);
+  submit: async (data: ContactFormData): Promise<ContactResponse> => {
+    const response = await api.post<ContactResponse>(ENDPOINTS.CONTACT, data);
     return response.data;
   },
 };

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, FC } from 'react';
 import gsap from 'gsap';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin } from 'lucide-react';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 interface HeaderProps {
   className?: string;
@@ -9,8 +10,8 @@ interface HeaderProps {
 
 const navigationItems = [
   { href: '#intro', label: 'Home' },
-  { href: '#panel-1', label: 'Portfolio' },
-  { href: '#panel-3', label: 'About' },
+  { href: '#portfolio', label: 'Portfolio' },
+  { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' }
 ];
 
@@ -20,7 +21,6 @@ const SocialLinks: FC = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const links = document.querySelectorAll('.social-link');
-      
       links.forEach(link => {
         const animation = gsap.to(link, {
           scale: 1.1,
@@ -43,7 +43,10 @@ const SocialLinks: FC = () => {
         href="https://github.com/nordiccodeworks"
         target="_blank"
         rel="noopener noreferrer"
-        className="social-link text-gray-300 hover:text-white transition-colors duration-300"
+        className="social-link 
+          text-gray-600 dark:text-gray-200
+          hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark
+          transition-all duration-300 hover:scale-105"
         aria-label="GitHub"
       >
         <Github size={20} strokeWidth={1.5} />
@@ -52,7 +55,10 @@ const SocialLinks: FC = () => {
         href="https://linkedin.com/company/nordiccodeworks"
         target="_blank"
         rel="noopener noreferrer"
-        className="social-link text-gray-300 hover:text-white transition-colors duration-300"
+        className="social-link 
+          text-gray-600 dark:text-gray-200
+          hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark
+          transition-all duration-300 hover:scale-105"
         aria-label="LinkedIn"
       >
         <Linkedin size={20} strokeWidth={1.5} />
@@ -64,12 +70,18 @@ const SocialLinks: FC = () => {
 const Header: FC<HeaderProps> = ({ className }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Close mobile menu when location changes
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [location.hash, isMobileMenuOpen]);
 
   // Header entrance animation
   useEffect(() => {
@@ -81,7 +93,6 @@ const Header: FC<HeaderProps> = ({ className }) => {
         ease: 'power3.out'
       });
 
-      // Initialize hover animation for logo
       const logoAnimation = gsap.to(logoRef.current, {
         scale: 1.05,
         duration: 0.3,
@@ -96,64 +107,8 @@ const Header: FC<HeaderProps> = ({ className }) => {
     return () => ctx.revert();
   }, []);
 
-  // Mobile menu animations
-  useEffect(() => {
-    if (!mobileMenuRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ paused: true });
-
-      // Menu container animation
-      tl.fromTo(mobileMenuRef.current,
-        { 
-          opacity: 0,
-          y: -10,
-          clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)'
-        },
-        { 
-          opacity: 1,
-          y: 0,
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          duration: 0.3,
-          ease: 'power3.out'
-        }
-      );
-
-      // Menu items animation
-      menuItemsRef.current.forEach((item, index) => {
-        if (item) {
-          tl.fromTo(item,
-            { opacity: 0, x: -20 },
-            { opacity: 1, x: 0, duration: 0.3 },
-            '-=0.1'
-          );
-        }
-      });
-
-      if (isMobileMenuOpen) {
-        tl.play();
-      } else if (mobileMenuRef.current) {
-        gsap.to(mobileMenuRef.current, {
-          opacity: 0,
-          y: -10,
-          clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
-          duration: 0.2,
-          ease: 'power2.in'
-        });
-      }
-    }, mobileMenuRef);
-
-    return () => ctx.revert();
-  }, [isMobileMenuOpen]);
-
-  // Close mobile menu on location change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
   const handleMenuButtonClick = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-
     gsap.to(menuButtonRef.current, {
       scale: 0.9,
       duration: 0.1,
@@ -163,16 +118,30 @@ const Header: FC<HeaderProps> = ({ className }) => {
     });
   };
 
+  // Update active link based on location
+  const isActiveLink = (href: string) => {
+    return location.hash === href || (href === '#intro' && !location.hash);
+  };
+
+  const handleLinkClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    window.location.hash = href;
+  };
+
   return (
     <header
       ref={headerRef}
-      className={`fixed top-0 left-0 w-full bg-[#0F172A] bg-opacity-95 backdrop-blur-none border-b border-white/10 shadow-lg z-[999] ${className}`}
-
+      className={`fixed top-0 left-0 w-full 
+        bg-white/90 dark:bg-surface-darker/90 
+        backdrop-blur-md 
+        border-b border-gray-200/20 dark:border-white/10 
+        shadow-lg dark:shadow-xl
+        z-[999] ${className}`}
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo - Keeping exact same colors */}
           <Link 
             to="/" 
             className="flex items-center group relative" 
@@ -191,28 +160,33 @@ const Header: FC<HeaderProps> = ({ className }) => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-          {navigationItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium transition-all duration-300 hover:text-white 
-                hover:scale-105"
-            >
-              {item.label}
-            </a>
-          ))}
-          <div className="pl-4 border-l border-white/10">
-            <SocialLinks />
-          </div>
-        </nav>
+            {navigationItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={handleLinkClick(item.href)}
+                className={`nav-link text-sm font-medium 
+                  text-gray-700 dark:text-gray-200 
+                  hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark 
+                  transition-all duration-300 hover:scale-105
+                  ${isActiveLink(item.href) ? 'text-tekhelet-base dark:text-tekhelet-hover-dark' : ''}`}
+              >
+                {item.label}
+              </a>
+            ))}
+            <div className="flex items-center gap-4 pl-4 border-l border-gray-200/50 dark:border-white/10">
+              <ThemeToggle variant="header" />
+              <SocialLinks />
+            </div>
+          </nav>
 
-          {/* Mobile Menu Button */}
           <button
             ref={menuButtonRef}
             className="md:hidden relative w-10 h-10 flex items-center justify-center 
-              text-gray-300 hover:text-white transition-colors duration-300"
+              text-gray-600 dark:text-gray-200 
+              hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark 
+              transition-all duration-300 hover:scale-105"
             onClick={handleMenuButtonClick}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
@@ -223,41 +197,33 @@ const Header: FC<HeaderProps> = ({ className }) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div
           ref={mobileMenuRef}
           id="mobile-menu"
           className="md:hidden fixed inset-x-0 top-20"
         >
-          <nav
-          className="mx-4 rounded-xl bg-surface-darker backdrop-blur-md shadow-lg 
-          border border-white/10 transform-gpu"          
-            aria-label="Mobile navigation"
-          >
-          <div className="px-4 py-6 space-y-4">
-          {navigationItems.map((item, index) => (
-            <div
-              key={item.href}
-              ref={(el) => (menuItemsRef.current[index] = el)}
-            >
-              <a
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 text-base font-medium transition-all duration-300 
-                  hover:text-white hover:translate-x-1 text-gray-300"
-              >
-                {item.label}
-              </a>
+          <nav className="mx-4 rounded-xl glass shadow-lg transform-gpu" aria-label="Mobile navigation">
+            <div className="px-4 py-6 space-y-4">
+              {navigationItems.map((item, index) => (
+                <div key={item.href} ref={(el) => (menuItemsRef.current[index] = el)}>
+                  <a 
+                    href={item.href} 
+                    onClick={handleLinkClick(item.href)}
+                    className={`nav-link block py-2 text-base font-medium
+                      text-gray-700 dark:text-gray-200
+                      hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark
+                      transition-all duration-300 hover:translate-x-1
+                      ${isActiveLink(item.href) ? 'text-tekhelet-base dark:text-tekhelet-hover-dark' : ''}`}
+                  >
+                    {item.label}
+                  </a>
+                </div>
+              ))}
+              <div className="pt-4 border-t border-gray-200/50 dark:border-white/10">
+                <SocialLinks />
+              </div>
             </div>
-          ))}
-          <div
-            className="pt-4 border-t border-white/10"
-            ref={(el) => (menuItemsRef.current[navigationItems.length] = el)}
-          >
-            <SocialLinks />
-          </div>
-        </div>
           </nav>
         </div>
       )}

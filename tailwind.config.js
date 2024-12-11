@@ -1,8 +1,9 @@
-import type { Config } from 'tailwindcss';
-import forms from '@tailwindcss/forms';
-import typography from '@tailwindcss/typography';
+// tailwind.config.js
+const forms = require('@tailwindcss/forms');
+const typography = require('@tailwindcss/typography');
 
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+const config = {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
@@ -19,7 +20,11 @@ const config: Config = {
       colors: {
         surface: {
           darker: '#131B2E',
-          lighter: '#f1f1f1',
+          lighter: '#F7F9FC',
+          card: {
+            light: '#FFFFFF',
+            dark: 'rgba(19, 27, 46, 0.8)',
+          }
         },
         mono: {
           50: '#FFFFFF',
@@ -34,20 +39,32 @@ const config: Config = {
           900: '#4C127E',
           950: '#0F172A',
         },
+        theme: {
+          light: {
+            bg: '#F7F9FC',
+            text: '#1A1A1A',
+            accent: '#432371',
+            hover: '#8655CA', // New hover color for light mode
+          },
+          dark: {
+            bg: '#131B2E',
+            text: '#FFFFFF',
+            accent: '#8655CA',
+            hover: '#A881E6', // New lighter hover color for dark mode
+          }
+        },
         accent: {
-          primary: '#FFE900',
-          secondary: '#A3EA71',
+          primary: '#432371',
+          secondary: '#8655CA',
           tertiary: '#2628DD',
+          hover: '#A881E6', // New universal hover state
         },
         tekhelet: {
           base: '#2D1B69',
           light: '#432371',
           dark: '#1A103F',
-          finn: {
-            1: '#2D1B69',
-            2: '#3D2B79',
-            3: '#4D3B89'
-          }
+          hover: '#8655CA', // Default hover
+          'hover-dark': '#A881E6', // Dark mode hover
         },
         status: {
           success: '#4CAF50',
@@ -57,8 +74,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],
-        heading: ['Poppins', 'sans-serif'],
-        body: ['Roboto', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'], 
+        body: ['Roboto', 'sans-serif'], 
       },
       backgroundImage: {
         'gradient-dark': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
@@ -68,6 +85,6 @@ const config: Config = {
     },
   },
   plugins: [forms, typography],
-} as const;
+};
 
-export default config;
+module.exports = config;

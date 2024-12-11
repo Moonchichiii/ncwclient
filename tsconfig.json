@@ -1,7 +1,17 @@
 {
-  "files": [],
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true
+  },
+  "files": ["./src/vite-env.d.ts"], 
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
+  ],
+  "include": [
+    "src/**/*", 
+    "*.ts", 
+    "*.tsx", 
+    "vite-env.d.ts" 
   ]
 }

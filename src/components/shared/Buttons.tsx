@@ -1,6 +1,4 @@
-// Buttons.tsx
-
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
