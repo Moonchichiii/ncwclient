@@ -1,5 +1,4 @@
-// App.tsx
-import { FC, lazy, Suspense, useRef } from 'react';
+import { FC, lazy, Suspense, useRef, useState } from 'react';
 import { useGSAPSetup } from './hooks/gsap-init';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import CookieConsent from './components/common/CookieConsent';
@@ -15,10 +14,10 @@ const Footer = lazy(() => import('./components/layout/Footer'));
 
 const App: FC = () => {
   const headerRef = useRef<HTMLElement>(null);
-  useGSAPSetup(headerRef);
+  const [showHeader, setShowHeader] = useState(false);
 
+  useGSAPSetup(headerRef, setShowHeader);
 
-  
   return (
     <div id="page" className="relative min-h-screen bg-theme-light-bg dark:bg-theme-dark-bg transition-colors duration-300">
       {/* Background Pattern */}
@@ -28,7 +27,15 @@ const App: FC = () => {
 
       <Suspense fallback={<LoadingSpinner />}>
         {/* Header */}
-        <header ref={headerRef} id="masthead" className="site-header">
+        <header
+          ref={headerRef}
+          id="masthead"
+          className={`site-header transform ${
+            showHeader 
+              ? 'translate-y-0 opacity-100 visible'
+              : '-translate-y-full opacity-0 invisible pointer-events-none'
+          }`}
+        >
           <nav className="p-4 bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-black/10 dark:border-white/10">
             <Header />
           </nav>
@@ -38,27 +45,27 @@ const App: FC = () => {
           <div id="smooth-content">
             <main id="content" className="relative bg-theme-light-bg dark:bg-theme-dark-bg text-theme-light-text dark:text-theme-dark-text transition-colors duration-300" role="main">
               {/* Landing Section */}
-              <section id="intro" className="section">
+              <section id="intro" className="section min-h-screen">
                 <LandingPage />
               </section>
 
               {/* Home Section */}
-              <section id="home" className="section">
+              <section id="home" className="section min-h-screen">
                 <HomePage />
               </section>
 
               {/* Portfolio Section */}
-              <section id="portfolio" className="section">
+              <section id="portfolio" className="section min-h-screen">
                 <PortfolioPage />
               </section>
 
               {/* About Section */}
-              <section id="about" className="section">
+              <section id="about" className="section min-h-screen">
                 <AboutPage />
               </section>
 
               {/* Contact Section */}
-              <section id="contact" className="section">
+              <section id="contact" className="section min-h-screen">
                 <ContactPage />
               </section>
             </main>

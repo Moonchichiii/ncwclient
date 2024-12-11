@@ -58,12 +58,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const activeStyles = active
       ? 'border-white bg-white text-black'
       : 'border-white/20 text-white hover:border-white/40';
-    const disabledStyles = disabled || loading ? 'opacity-50 cursor-not-allowed' : '';
+    const disabledStyles = disabled ?? loading ? 'opacity-50 cursor-not-allowed' : '';
 
     return (
       <button
         ref={buttonRef}
-        disabled={disabled || loading}
+        disabled={disabled ?? loading}
         className={`${baseStyles} ${activeStyles} ${disabledStyles} ${className}`}
         {...props}
       >

@@ -102,6 +102,7 @@ const LandingPage: FC = () => {
       className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden
                  bg-white dark:bg-surface-darker transition-colors duration-300"
     >
+                 
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-100 to-white 

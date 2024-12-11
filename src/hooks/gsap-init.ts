@@ -23,95 +23,74 @@ interface Section extends Element {
   id?: string;
 }
 
-const setupHeaderAnimation = (headerRef: RefObject<HTMLElement>, lastScrollY: RefObject<number>) => {
+interface SetShowHeader {
+  (show: boolean): void;
+}
+
+const setupHeaderAnimation = (
+  headerRef: RefObject<HTMLElement>, 
+  lastScrollY: RefObject<number>,
+  setShowHeader: SetShowHeader
+) => {
   if (!headerRef.current) return;
 
-  // Force initial state
-  gsap.set(headerRef.current, {
-    opacity: 0,
-    y: -100,
-    pointerEvents: 'none',
-    immediateRender: true,
-    force3D: true
-  });
+  // Set initial state
+  setShowHeader(false);
 
-  // Kill any existing animations on the header
-  gsap.killTweensOf(headerRef.current);
-
-  // Create trigger for home section to hide header
+  // Landing page section - keep header hidden
   ScrollTrigger.create({
-    trigger: '#home',
+    trigger: '#intro',
     start: 'top top',
-    end: 'bottom top',
+    end: 'bottom bottom',
     onEnter: () => {
-      gsap.to(headerRef.current, {
-        opacity: 0,
-        y: -100,
-        pointerEvents: 'none',
-        duration: 0.4,
-        ease: 'power2.out'
-      });
+      setShowHeader(false);
     },
-    onLeave: () => {
-      gsap.to(headerRef.current, {
-        opacity: 1,
-        y: 0,
-        pointerEvents: 'auto',
-        duration: 0.4,
-        ease: 'power2.out'
-      });
-    },
-    onLeaveBack: () => {
-      gsap.to(headerRef.current, {
-        opacity: 0,
-        y: -100,
-        pointerEvents: 'none',
-        duration: 0.3,
-        ease: 'power2.in'
-      });
+    onEnterBack: () => {
+      setShowHeader(false);
     }
   });
-
-  // Create scroll trigger for header show/hide after home section
+  
+  // Create trigger for home section
   ScrollTrigger.create({
-    start: 'top+=100',
+    trigger: '#home',
+    start: 'top bottom-=20%',
+    end: 'bottom top',
+    onEnter: () => {
+      setShowHeader(true);
+    },
+    onLeave: () => {
+      setShowHeader(true);
+    },
+    onLeaveBack: () => {
+      setShowHeader(false);
+    }
+  });
+  
+  // Global scroll behavior
+  ScrollTrigger.create({
+    start: 0,
     end: 'max',
     onUpdate: (self) => {
-      if (!headerRef.current) return;
-      
       const scrollY = window.scrollY;
-      const isPassedHome = scrollY > window.innerHeight;
-
-      if (isPassedHome) {
+      const isPassedIntro = scrollY > window.innerHeight;
+  
+      if (isPassedIntro) {
         const direction = self.direction;
         const delta = scrollY - lastScrollY.current;
-
+  
         if (direction === 1 && delta > 50) {
-          // Scrolling down - hide header
-          gsap.to(headerRef.current, {
-            y: -100,
-            opacity: 0,
-            pointerEvents: 'none',
-            duration: 0.3,
-            ease: 'power2.out'
-          });
+          setShowHeader(false);
         } else if (direction === -1) {
-          // Scrolling up - show header
-          gsap.to(headerRef.current, {
-            y: 0,
-            opacity: 1,
-            pointerEvents: 'auto',
-            duration: 0.3,
-            ease: 'power2.out'
-          });
+          setShowHeader(true);
         }
       }
-
+  
       lastScrollY.current = scrollY;
     }
   });
 };
 
+// Add these functions back
 const handleNavClick = (e: MouseEvent) => {
   e.preventDefault();
   const target = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
@@ -175,21 +154,29 @@ const updateActiveNavLink = (sectionId: string) => {
   });
 };
 
-export const useGSAPSetup = (headerRef?: RefObject<HTMLElement>) => {
+export const useGSAPSetup = (
+  headerRef?: RefObject<HTMLElement>,
+  setShowHeader?: SetShowHeader
+) => {
   const lastScrollY = useRef(0);
   const cleanupRef = useRef<(() => void)[]>([]);
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useLayoutEffect(() => {
+    if (!setShowHeader || !headerRef) return;
+
     // Clean up existing animations
     ScrollTrigger.getAll().forEach(t => t.kill());
     gsap.killTweensOf(window);
     cleanupRef.current.forEach(cleanup => cleanup());
     cleanupRef.current = [];
 
+    // Set initial state
+    setShowHeader(false);
+
     // Cache DOM elements
     const elements = {
-      header: headerRef?.current ?? document.querySelector('#masthead'),
+      header: headerRef.current,
       sections: gsap.utils.toArray<Section>('.section'),
       footer: document.querySelector('footer'),
       wrapper: document.querySelector('#smooth-wrapper'),
@@ -211,9 +198,7 @@ export const useGSAPSetup = (headerRef?: RefObject<HTMLElement>) => {
 
     const ctx = gsap.context(() => {
       // Setup header animations
-      if (headerRef) {
-        setupHeaderAnimation(headerRef, lastScrollY);
-      }
+      setupHeaderAnimation(headerRef, lastScrollY, setShowHeader);
 
       // Setup navigation
       const cleanupNav = setupNavigationHandlers();
@@ -269,7 +254,7 @@ export const useGSAPSetup = (headerRef?: RefObject<HTMLElement>) => {
       cleanupRef.current.forEach(cleanup => cleanup());
       cleanupRef.current = [];
     };
-  }, [headerRef]);
+  }, [headerRef, setShowHeader]);
 };
 
 // Utilities for ScrollTrigger refresh

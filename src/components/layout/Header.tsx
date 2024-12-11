@@ -123,12 +123,6 @@ const Header: FC<HeaderProps> = ({ className }) => {
     return location.hash === href || (href === '#intro' && !location.hash);
   };
 
-  const handleLinkClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    setIsMobileMenuOpen(false);
-    window.location.hash = href;
-  };
-
   return (
     <header
       ref={headerRef}
@@ -165,7 +159,6 @@ const Header: FC<HeaderProps> = ({ className }) => {
               <a
                 key={item.href}
                 href={item.href}
-                onClick={handleLinkClick(item.href)}
                 className={`nav-link text-sm font-medium 
                   text-gray-700 dark:text-gray-200 
                   hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark 
@@ -209,7 +202,7 @@ const Header: FC<HeaderProps> = ({ className }) => {
                 <div key={item.href} ref={(el) => (menuItemsRef.current[index] = el)}>
                   <a 
                     href={item.href} 
-                    onClick={handleLinkClick(item.href)}
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className={`nav-link block py-2 text-base font-medium
                       text-gray-700 dark:text-gray-200
                       hover:text-tekhelet-base dark:hover:text-tekhelet-hover-dark

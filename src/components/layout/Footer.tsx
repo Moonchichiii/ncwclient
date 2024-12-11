@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
-import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
 import PolicyModal from '../common/PolicyModal';
 import { policies } from './policies';
 
@@ -13,7 +12,7 @@ interface NavigationItem {
 interface SocialLink {
   platform: string;
   url: string;
-  icon: typeof Github | typeof Linkedin;
+  icon: React.ElementType;
   ariaLabel: string;
 }
 
@@ -91,8 +90,12 @@ const Footer: React.FC = () => {
           ease: 'power2.out'
         });
 
-        link.addEventListener('mouseenter', () => animation.play());
-        link.addEventListener('mouseleave', () => animation.reverse());
+        link.addEventListener('mouseenter', () => {
+          animation.play();
+        });
+        link.addEventListener('mouseleave', () => {
+          animation.reverse();
+        });
       });
     }, footerRef);
 
@@ -108,7 +111,6 @@ const Footer: React.FC = () => {
   return (
     <>
       <footer ref={footerRef} className="relative w-full bg-white dark:bg-surface-darker py-16 overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 bg-pattern opacity-5 dark:opacity-10" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -119,10 +121,6 @@ const Footer: React.FC = () => {
               <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed max-w-xs">
                 Crafting elegant digital solutions with Scandinavian simplicity and precision.
               </p>
-              <div className="flex items-center gap-2 mt-4 justify-center sm:justify-start">
-                <MapPin size={16} className="text-gray-500 dark:text-gray-400" />
-                <span className="text-gray-500 dark:text-gray-400 text-sm">Stockholm, Sweden</span>
-              </div>
             </div>
 
             {/* Navigation Links */}
@@ -130,13 +128,13 @@ const Footer: React.FC = () => {
               <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h3>
               <nav className="flex flex-col items-center sm:items-start space-y-3">
                 {navigationItems.map((item) => (
-                  <Link
+                  <a
                     key={item.path}
-                    to={item.path}
+                    href={item.path}
                     className="animate-link text-gray-600 dark:text-gray-300 hover:text-tekhelet-base dark:hover:text-white transition-all duration-300 hover:translate-x-1 text-sm"
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 ))}
               </nav>
             </div>
@@ -161,13 +159,6 @@ const Footer: React.FC = () => {
             <div className="footer-section">
               <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Connect</h3>
               <div className="space-y-4">
-                <a
-                  href="mailto:contact@nordiccodeworks.com"
-                  className="group flex items-center gap-2 justify-center sm:justify-start text-gray-600 dark:text-gray-300 hover:text-tekhelet-base dark:hover:text-white transition-all duration-300"
-                >
-                  <Mail size={16} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="text-sm">contact@nordiccodeworks.com</span>
-                </a>
                 <div className="flex items-center gap-4 justify-center sm:justify-start">
                   {socialLinks.map((social) => (
                     <a

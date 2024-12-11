@@ -114,7 +114,7 @@ hover:border-tekhelet-base/50 dark:hover:border-white/20
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
           <form
-            onSubmit={(e) => { e.preventDefault(); handleSubmit(onSubmit)(); }}
+            onSubmit={(e) => { e.preventDefault(); void handleSubmit(onSubmit)(); }}
             className="space-y-6 backdrop-blur-lg p-8 rounded-2xl
               border border-gray-200/50 dark:border-white/10
               bg-white/60 dark:bg-black/20"
