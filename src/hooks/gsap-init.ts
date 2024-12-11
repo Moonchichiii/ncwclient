@@ -17,13 +17,18 @@ export const useGSAPSetup = (
     setShowHeader(false);
 
     // Create scroll trigger
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: "#intro", // The landing page section
-      start: "top top",   // When the top of #intro hits the top of the viewport
-      end: "bottom top",  // When the bottom of #intro hits the top of the viewport
-      onLeave: () => setShowHeader(true),  // Show header after leaving the intro
-      onEnterBack: () => setShowHeader(false), // Hide header when scrolling back into the intro
+    ScrollTrigger.create({
+      trigger: "#intro", 
+      start: "top top",   
+      end: "bottom top",  
+      onLeave: () => {
+        gsap.to('.side-link, .scroll-indicator', { opacity: 0, y: -20, duration: 0.5 });
+      },
+      onEnterBack: () => {
+        gsap.to('.side-link, .scroll-indicator', { opacity: 1, y: 0, duration: 0.5 });
+      },
     });
+    
 
     // Cleanup the ScrollTrigger instance on unmount
     return () => scrollTrigger.kill();

@@ -48,12 +48,21 @@
 /* Essential Component Styles */
 @layer components {
   /* Simple Header Styles */
+  #intro {
+    @apply relative min-h-screen z-0;
+  }
+
+  .scroll-indicator {
+    @apply absolute bottom-8 z-0;
+  }
+
+  .side-link {
+    @apply fixed bottom-12 left-6 z-0;
+  }
+
+  /* Simple Header Styles */
   #masthead {
-    @apply fixed w-full 
-           bg-white/90 dark:bg-black/80
-           backdrop-blur-md
-           border-b border-gray-200/20 dark:border-white/10
-           transition-transform duration-300;
+    @apply fixed w-full bg-white/90 dark:bg-black/80 z-10;
   }
 
   /* Basic Section Styles */
